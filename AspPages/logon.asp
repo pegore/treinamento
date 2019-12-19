@@ -1,9 +1,29 @@
 <%
-Response.Charset="UTF-8"
-Set cn = Server.CreateObject("ADODB.Connection")
-cn.Provider = "sqloledb"
-cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-set rs = cn.Execute("SELECT * FROM [treinamento].[dbo].[estado]")
+if not isempty(request.Form) then
+    'abrindo conexão
+    Set cn = Server.CreateObject("ADODB.Connection")
+    cn.Provider = "sqloledb"
+    cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+    dim fUsuario
+    dim fpassword
+    fUsuario=Request.Form("txtUsuario")
+    fpassword=Request.Form("pwdSenha")
+    If fUsuario<>"" Then
+        set rs=cn.Execute("SELECT usuario,senha FROM [treinamento].[dbo].[usuario] where usuario='" & fUsuario & "' and senha='" & fpassword & "'")
+        set rs1=cn.Execute("SELECT * FROM [treinamento].[dbo].[estado]")
+        Response.Write rs1.Fields.Count        
+        do until rs1.EOF
+            Response.Write(" ")
+            For Each x in rs1.Fields
+                ' body
+                Response.Write(x.value)
+            Next
+            Response.Write("<br/>")
+            rs1.MoveNext
+        loop
+    End If
+    
+End If
 %>
 <!doctype html>
 <html lang="pt-br">
@@ -28,17 +48,17 @@ set rs = cn.Execute("SELECT * FROM [treinamento].[dbo].[estado]")
         <th scope="col">Descrição</th>
         </tr>
     </thead>
-       <%do until rs.EOF%>
-        <tr>
-            <%for each x in rs.Fields%>
-                <td><%Response.Write(x.value)%></td>
-            <%next
-            rs.MoveNext%>
-        </tr>
-       <%loop
-    rs.close
-    cn.close
-    %>
+        <%do until rs.EOF%>
+            <tr>
+                <%for each x in rs.Fields%>
+                    <td><%Response.Write(x.value)%></td>
+                <%next
+                rs.MoveNext%>
+            </tr>
+        <%loop
+        rs.close
+        cn.close
+        %>
     </table>
 
     </div>
