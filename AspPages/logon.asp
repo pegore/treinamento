@@ -1,3 +1,10 @@
+<%
+Response.Charset="UTF-8"
+Set cn = Server.CreateObject("ADODB.Connection")
+cn.Provider = "sqloledb"
+cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+set rs = cn.Execute("SELECT * FROM [treinamento].[dbo].[estado]")
+%>
 <!doctype html>
 <html lang="pt-br">
 
@@ -13,29 +20,27 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="text-center">
-            <img src="Images\key.png" class="rounded" alt="key">
-        </div>
-        <form class="text-center" action="AspPages\logon.asp" method="post">
-            <div class="form-group row">
-                <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="txtUsuario" placeholder="Usuário">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
-                <div class="col-sm-5">
-                    <input type="password" class="form-control" id="pwdSenha" placeholder="Senha">
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-12">
-                    <button type="submit" class="btn btn-primary">Fazer Login</button>
-                </div>
-            </div>
-        </form>
+    <div class="container-fluid">       
+    <table class="table-bordered">
+    <thead>
+        <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Descrição</th>
+        </tr>
+    </thead>
+       <%do until rs.EOF%>
+        <tr>
+            <%for each x in rs.Fields%>
+                <td><%Response.Write(x.value)%></td>
+            <%next
+            rs.MoveNext%>
+        </tr>
+       <%loop
+    rs.close
+    cn.close
+    %>
+    </table>
+
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -49,5 +54,4 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 </body>
-
 </html>
