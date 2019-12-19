@@ -6,38 +6,33 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="css\signin.css" rel="stylesheet">
 </head>
 
-<body>
-    <div class="container-fluid">
-        <div class="text-center">
-            <img src="Images\key.png" class="rounded" alt="key">
+<body class="text-center">
+    <form name="fromLogon" class="form-signin" action="AspPages\logon.asp" method="post">
+        <img src="Images\key.png" class="col-sm-6 text-center" alt="key">
+        <div class="form-group row">
+            <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" placeholder="Usuário">
+            </div>
         </div>
-        <form class="text-center" action="AspPages\logon.asp" method="post">
-            <div class="form-group row">
-                <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
-                <div class="col-sm-5">
-                    <input type="text" class="form-control" id="txtUsuario" name ="txtUsuario" placeholder="Usuário">
-                </div>
+        <div class="form-group row">
+            <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
+            <div class="col-sm-9">
+                <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" placeholder="Senha">
             </div>
-            <div class="form-group row">
-                <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
-                <div class="col-sm-5">
-                    <input type="password" class="form-control" id="pwdSenha" name="pwdSenha"placeholder="Senha">
-                </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <button type="submit" class="btn btn-primary">Fazer Login</button>
             </div>
-            <div class="form-group row">
-                <div class="col-sm-12">
-                    <button type="submit" class="btn btn-primary">Fazer Login</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- Optional JavaScript -->
+        </div>
+    </form> <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -48,6 +43,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="Scripts\scripts.js"></script>
 </body>
 
 </html>
