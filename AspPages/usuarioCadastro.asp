@@ -1,14 +1,13 @@
 <%
-  Set cn = Server.CreateObject("ADODB.Connection")
-  cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT * FROM [treinamento].[dbo].[estado]"
-  Set rs=Server.CreateObject("ADODB.recordset")
-  rs.Open sql, cn, &H0001
+  Set cnUser = Server.CreateObject("ADODB.Connection")
+  cnUser.Provider = "sqloledb"
+  cnUser.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+  sqlUser = "SELECT * FROM [treinamento].[dbo].[usuario] where usuid=" & Request.QueryString("usuid")
+  Set rsUser=Server.CreateObject("ADODB.recordset")
+  rsUser.Open sqlUser, cnUser, &H0001
 %>
 <!doctype html>
 <html lang="pt-br">
-
 <head>
   <title>Title</title>
   <!-- Required meta tags -->
@@ -18,56 +17,61 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="../css/style.css" rel="stylesheet">
 </head>
-
-<body>
-  <div class="container-fluid">
+<body class="text-center">
     <form name="frmUser" class="text-center" action="../AspPages/user.asp" method="post">
       <div class="form-group row">
         <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" placeholder="Usuário">
+          <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" value="<%=rsUser.Fields.Item(1)%>" placeholder="Usuário">
         </div>
         <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
         <div class="col-sm-3">
-          <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" placeholder="Senha">
+          <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" value="<%=rsUser.Fields.Item(2)%>" placeholder="Senha">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtNome" class="col-sm-3 col-form-label">Nome:</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" id="txtNome" name="txtNome" placeholder="Nome">
+          <input type="text" class="form-control" id="txtNome" name="txtNome" value="<%=rsUser.Fields.Item(3)%>" placeholder="Nome">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtEndereco" class="col-sm-3 col-form-label">Endereço:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtEndereco" name="txtEndereco" placeholder="Endereço">
+          <input type="text" class="form-control" id="txtEndereco" name="txtEndereco" value="<%=rsUser.Fields.Item(4)%>" placeholder="Endereço">
         </div>
         <label for="txtCidade" class="col-sm-3 col-form-label">Cidade:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCidade" name="txtCidade" placeholder="Cidade">
+          <input type="text" class="form-control" id="txtCidade" name="txtCidade" value="<%=rsUser.Fields.Item(5)%>" placeholder="Cidade">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtCep" class="col-sm-3 col-form-label">Cep:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCep" name="txtCep" placeholder="CEP">
+          <input type="text" class="form-control" id="txtCep" name="txtCep" value="<%=rsUser.Fields.Item(6)%>" placeholder="CEP">
         </div>
         <label for="txtCidade" class="col-sm-3 col-form-label">Estado:</label>
         <div class="col-sm-3">          
-          <select class="form-control" id="selEstados" name="selEstados">
-            <%                      
-              do until rs.EOF
-                  for each x in rs.Fields
-                    value = rs("estadoid")
-                    text = rs("nome")
-                  Next
-                  Response.write("<option value="&value&">"&text&"</option>")
-                  rs.MoveNext
+          <select class="form-control" id="selEstados" value="<%=rsUser.Fields.Item(7)%>"name="selEstados">
+            <%
+              Set cnEst = Server.CreateObject("ADODB.Connection")
+              cnEst.Provider = "sqloledb"
+              cnEst.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+              sqlEst = "SELECT * FROM [treinamento].[dbo].[estado]"
+              Set rsEst=Server.CreateObject("ADODB.recordset")
+              rsEst.Open sqlEst, cnEst, &H0001
+              do until rsEst.EOF
+                for each x in rsEst.Fields
+                    value = rsEst("estadoid")
+                    text = rsEst("nome")
+                Next
+                Response.write("<option value="&value&">"&text&"</option>")
+                rsEst.MoveNext
               loop
-              rs.close
-              cn.close
+              rsEst.Close
+              cnEst.close
             %>
           </select>
         </div>
@@ -77,8 +81,10 @@
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
       </div>
+      <%
+        cnUser.close
+      %>
     </form>
-  </div>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -91,6 +97,6 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+  
 </body>
-
 </html>

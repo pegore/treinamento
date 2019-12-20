@@ -11,11 +11,12 @@ sql=sql & "'" & Request.Form("txtCidade") & "',"
 sql=sql & "'" & Request.Form("txtCep") & "',"
 sql=sql & "'" & 1 & "')"
 on error resume next
-cn.Execute sql,recaffected
+cn.Execute sql, recaffected
 if err<>0 then
-  Response.Write("No update permissions!")
-else
-  Response.Write("<h3>" & recaffected & " record added</h3>")
+  Response.Write("Sem permissão para inserir usuários!")
+  Response.Redirect("../AspPages/usuarioCadastro.asp")
 end if
+Response.Write("<h3>" & recaffected & " registro adicionado</h3>")
 cn.close
+Response.Redirect("../AspPages/usuarioTabela.asp")
 %>

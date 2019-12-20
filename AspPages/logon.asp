@@ -22,7 +22,7 @@ if fUsuario=rs("usuario") and fpassword = rs("senha") then
     Session("senha") = rs("senha")
     Session("codigo") = rs("usuid")
     rs.close
-    Response.Redirect("../HtmlPages/usuarioCadastro.asp")						
+    Response.Redirect("../AspPages/usuarioCadastro.asp")						
 End If
 rs.close
 cn.close
