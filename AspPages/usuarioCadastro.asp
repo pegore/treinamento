@@ -1,10 +1,28 @@
 <%
+  if Request.QueryString("recaffected")<>0 Then
+      Response.Write("<div class='alert alert-warning alert-dismissible fade show' role='alert'>")
+      Response.Write("<strong>"&Request.QueryString("recaffected")&" Registro(s) gravado(s)!</strong> Olha esse alerta animado, como é chique!")
+      Response.Write("<button type='button' class='close' data-dismiss='alert' aria-label='Close'>")
+      Response.Write("<span aria-hidden='true'>&times;</span></button></div>")
+  End If
+  
   Set cnUser = Server.CreateObject("ADODB.Connection")
   cnUser.Provider = "sqloledb"
   cnUser.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-  sqlUser = "SELECT * FROM [treinamento].[dbo].[usuario] where usuid=" & Request.QueryString("usuid")
-  Set rsUser=Server.CreateObject("ADODB.recordset")
-  rsUser.Open sqlUser, cnUser, &H0001
+  dim usuid,usuario,senha,endereco,cidade,cep,estado
+  usuid =  Request.QueryString("usuid")
+  if usuid<>"" Then
+    sqlUser = "SELECT * FROM [treinamento].[dbo].[usuario] where usuid=" & usuid
+    Set rsUser=Server.CreateObject("ADODB.recordset")
+    rsUser.Open sqlUser, cnUser, &H0001
+    usuario=rsUser.Fields.Item(1)
+    senha=rsUser.Fields.Item(2)
+    nome=rsUser.Fields.Item(3)
+    endereco=rsUser.Fields.Item(4)
+    cidade=rsUser.Fields.Item(5)
+    cep=rsUser.Fields.Item(6)
+    estado=rsUser.Fields.Item(7)
+  end if
 %>
 <!doctype html>
 <html lang="pt-br">
@@ -24,37 +42,37 @@
       <div class="form-group row">
         <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" value="<%=rsUser.Fields.Item(1)%>" placeholder="Usuário">
+          <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" value="<%=usuario%>" placeholder="Usuário">
         </div>
         <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
         <div class="col-sm-3">
-          <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" value="<%=rsUser.Fields.Item(2)%>" placeholder="Senha">
+          <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" value="<%=senha%>" placeholder="Senha">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtNome" class="col-sm-3 col-form-label">Nome:</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" id="txtNome" name="txtNome" value="<%=rsUser.Fields.Item(3)%>" placeholder="Nome">
+          <input type="text" class="form-control" id="txtNome" name="txtNome" value="<%=nome%>" placeholder="Nome">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtEndereco" class="col-sm-3 col-form-label">Endereço:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtEndereco" name="txtEndereco" value="<%=rsUser.Fields.Item(4)%>" placeholder="Endereço">
+          <input type="text" class="form-control" id="txtEndereco" name="txtEndereco" value="<%=endereco%>" placeholder="Endereço">
         </div>
         <label for="txtCidade" class="col-sm-3 col-form-label">Cidade:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCidade" name="txtCidade" value="<%=rsUser.Fields.Item(5)%>" placeholder="Cidade">
+          <input type="text" class="form-control" id="txtCidade" name="txtCidade" value="<%=cidade%>" placeholder="Cidade">
         </div>
       </div>
       <div class="form-group row">
         <label for="txtCep" class="col-sm-3 col-form-label">Cep:</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCep" name="txtCep" value="<%=rsUser.Fields.Item(6)%>" placeholder="CEP">
+          <input type="text" class="form-control" id="txtCep" name="txtCep" value="<%=cep%>" placeholder="CEP">
         </div>
-        <label for="txtCidade" class="col-sm-3 col-form-label">Estado:</label>
+        <label for="selEstados" class="col-sm-3 col-form-label">Estado:</label>
         <div class="col-sm-3">          
-          <select class="form-control" id="selEstados" value="<%=rsUser.Fields.Item(7)%>"name="selEstados">
+          <select class="form-control" id="selEstados" name="selEstados">
             <%
               Set cnEst = Server.CreateObject("ADODB.Connection")
               cnEst.Provider = "sqloledb"
@@ -76,14 +94,15 @@
           </select>
         </div>
       </div>
+      <%
+        cnUser.close
+      %>
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
       </div>
-      <%
-        cnUser.close
-      %>
+      
     </form>
 
   <!-- Optional JavaScript -->

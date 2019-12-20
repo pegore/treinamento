@@ -2,12 +2,13 @@
   Set cnUser = Server.CreateObject("ADODB.Connection")
   cnUser.Provider = "sqloledb"
   cnUser.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-  sqlUser = "SELECT * FROM [treinamento].[dbo].[usuario] where usuid=" & Request.QueryString("usuid")
-  Set rsUser=Server.CreateObject("ADODB.recordset")
-  rsUser.Open sqlUser, cnUser, &H0001
+  'sqlUser = "SELECT * FROM [treinamento].[dbo].[usuario] where usuid=" & Request.QueryString("usuid")
+  'Set rsUser=Server.CreateObject("ADODB.recordset")
+  'rsUser.Open sqlUser, cnUser, &H0001
 %>
 <!doctype html>
 <html lang="pt-br">
+
 <head>
   <title>Title</title>
   <!-- Required meta tags -->
@@ -19,60 +20,52 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="../css/style.css" rel="stylesheet">
 </head>
-<body class="text-center">
-    <form name="frmUser" class="text-center" action="../AspPages/user.asp" method="post">
+
+<body>
+  <div class="container-fluid">
+    <form name="frmTarefa" class="form-group" action="../AspPages/tarefa.asp" method="post">
       <div class="form-group row">
-        <label for="txtUsuario" class="col-sm-3 col-form-label">Usuário:</label>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" value="<%=rsUser.Fields.Item(1)%>" placeholder="Usuário">
-        </div>
-        <label for="pwdSenha" class="col-sm-3 col-form-label">Senha:</label>
-        <div class="col-sm-3">
-          <input type="password" class="form-control" id="pwdSenha" name="pwdSenha" value="<%=rsUser.Fields.Item(2)%>" placeholder="Senha">
+        <label for="txtTitulo" class="col-sm-3 col-form-label">Título:</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="txtTitulo" name="txtTitulo" 
+            placeholder="Usuário">
         </div>
       </div>
       <div class="form-group row">
-        <label for="txtNome" class="col-sm-3 col-form-label">Nome:</label>
-        <div class="col-sm-9">
-          <input type="text" class="form-control" id="txtNome" name="txtNome" value="<%=rsUser.Fields.Item(3)%>" placeholder="Nome">
+        <label for="selGerador" class="col-sm-3 col-form-label">Gerador:</label>
+        <div class="col-sm-5">
+          <select class="form-control" id="selGerador" value="" name="selGerador">
+            <option value="-1">Selecione o Gerador</option>
+            <option value="1">gerador 1</option>
+            <option value="2">gerador 2</option>
+            <option value="3">gerador 3</option>
+            <option value="4">gerador 4</option>
+            <option value="5">gerador 5</option>
+            <option value="6">gerador 6</option>
+          </select>
         </div>
       </div>
       <div class="form-group row">
-        <label for="txtEndereco" class="col-sm-3 col-form-label">Endereço:</label>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtEndereco" name="txtEndereco" value="<%=rsUser.Fields.Item(4)%>" placeholder="Endereço">
-        </div>
-        <label for="txtCidade" class="col-sm-3 col-form-label">Cidade:</label>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCidade" name="txtCidade" value="<%=rsUser.Fields.Item(5)%>" placeholder="Cidade">
+        <label for="txtDescricao" class="col-sm-3 col-form-label">Descrição:</label>
+        <div class="col-sm-5">
+          <textarea class="form-control" id="txtDescricao" rows="5" placeholder="Descrição da tarefa"></textarea>
         </div>
       </div>
       <div class="form-group row">
-        <label for="txtCep" class="col-sm-3 col-form-label">Cep:</label>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" id="txtCep" name="txtCep" value="<%=rsUser.Fields.Item(6)%>" placeholder="CEP">
+        <label for="txtData" class="col-sm-3 col-form-label">Data:</label>
+        <div class="col-sm-5">
+          <input type="date" class="form-control" id="txtData" name="txtData" placeholder="Data">
         </div>
-        <label for="txtCidade" class="col-sm-3 col-form-label">Estado:</label>
-        <div class="col-sm-3">          
-          <select class="form-control" id="selEstados" value="<%=rsUser.Fields.Item(7)%>"name="selEstados">
-            <%
-              Set cnEst = Server.CreateObject("ADODB.Connection")
-              cnEst.Provider = "sqloledb"
-              cnEst.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-              sqlEst = "SELECT * FROM [treinamento].[dbo].[estado]"
-              Set rsEst=Server.CreateObject("ADODB.recordset")
-              rsEst.Open sqlEst, cnEst, &H0001
-              do until rsEst.EOF
-                for each x in rsEst.Fields
-                    value = rsEst("estadoid")
-                    text = rsEst("nome")
-                Next
-                Response.write("<option value="&value&">"&text&"</option>")
-                rsEst.MoveNext
-              loop
-              rsEst.Close
-              cnEst.close
-            %>
+      </div>
+      <div class="form-group row">
+        <label for="selStatus" class="col-sm-3 col-form-label">Status:</label>
+        <div class="col-sm-5">
+          <select class="form-control" id="selStatus" name="selStatus">
+            <option value="-1">Selecione o Status</option>
+            <option value="0">Não Iniciado</option>
+            <option value="1">Em andamento</option>
+            <option value="7">Cancelada</option>
+            <option value="9">Concluída</option>
           </select>
         </div>
       </div>
@@ -81,10 +74,8 @@
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
       </div>
-      <%
-        cnUser.close
-      %>
     </form>
+  </div>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -97,6 +88,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
-  
+    <script src="../Scripts/tarefaCadastro.js"></script>
+
 </body>
+
 </html>
