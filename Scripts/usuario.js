@@ -1,60 +1,45 @@
 $(document).ready(function () {
     debugger;
     buscaEstados(document.getElementById('selEstados'));
-    buscaDados(1);
+   buscaDados(20);
 });
 
 function buscaEstados(idElemento) {
     if (!idElemento) {
         return false;
-    }    
+    }
     return $.ajax({
         url: "./AspPages/estado.asp",
         type: 'GET',
-        contentType: 'application/json',        
-        success: function(data) {
-            var d = JSON.parse(data);
-            var estados = d['Estados'];
-            for(var i = 0; i < estados.length; i++) {
-                var opt = document.createElement('option');
-                opt.innerHTML = estados[i]['Nome'];
-                opt.value = estados[i]['Id'];
-                idElemento.appendChild(opt);
-            }      
+        contentType: 'application/json',
+        success: function (data) {
+            preencheOptions(idElemento,JSON.parse(data));
         }
     });
 }
 function buscaDados(idUser) {
-    debugger;
     if (!idUser) {
         return false;
     }
-    var prForm= document.getElementById('frmUser');    
+    var prForm = document.getElementById('frmUser');
     return $.ajax({
-        url: "./AspPages/user.asp?acao=Editar",
+        url: "./AspPages/user.asp?usuid="+idUser+"&acao=Editar",
+        data:"",
         type: 'GET',
-        contentType: 'application/json',        
-        success: function (prForm, data) {
-            debugger;
-            var n = 0;
-            while (prForm[n]) {
-                var txtNome = prForm[n].name;
-                prForm[n].value = data[txtNome] || '';
-                n++;
-            }
-            return prForm;
+        contentType: 'application/json',
+        success: function (data) {
+            setFormCampos(prForm, JSON.parse(data));
         }
     });
 }
-function preencheOptions(data) {
-    var d = JSON.parse(data);
-    var estados = d['Estados'];
-    for(var i = 0; i < estados.length; i++) {
+function preencheOptions(idElemento,data) {   
+    var estados = data['Estados'];
+    for (var i = 0; i < estados.length; i++) {
         var opt = document.createElement('option');
         opt.innerHTML = estados[i]['Nome'];
         opt.value = estados[i]['Id'];
         idElemento.appendChild(opt);
-    }      
+    }
 }
 
 /**
@@ -69,12 +54,11 @@ function preencheOptions(data) {
  * @returns {HTMLForm}
  */
 function setFormCampos(prForm, prJSON) {
-    debugger;
     var n = 0;
-	while (prForm[n]) {
-		var txtNome = prForm[n].name;
-		prForm[n].value = prJSON[txtNome] || '';
-		n++;
-	}
-	return prForm;
+    while (prForm[n]) {
+        var txtNome = prForm[n].name;
+        prForm[n].value = prJSON[txtNome] || '';
+        n++;
+    }
+    return prForm;
 }
