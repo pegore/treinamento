@@ -44,8 +44,8 @@
                   usuID=rs.Fields.Item(0) 
               next
               Response.Write "<th scope='col'>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-edit'></a>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-trash'></a>"
+              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"&acao=Editar' class='fa fa-fw fa-edit'></a>"
+              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"&acao=Excluir' class='fa fa-fw fa-trash'></a>"
               Response.Write "</th></tr>"
               rs.MoveNext
             Loop
