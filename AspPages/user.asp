@@ -1,11 +1,16 @@
 <%
+'
+'Seleção das funções a serem realizadas
+'
 acao = Request.QueryString("acao")
 id = Request.QueryString("usuid")
 Select Case acao
-  Case "Editar"
-    Call EditarUsuario(id)
+  Case "BuscaPorId"
+    Call BuscaPorId(id)
   Case "Inserir"
     Call InserirNovoUsuario()
+  Case "Editar"
+    Call EditarUsuario(id)
   Case "Excluir"
     Call ExcluirUsuario(id)
   Case "Listar"
@@ -14,6 +19,22 @@ Select Case acao
     Call MsgRetorno("Ação Inválida!!!")
 End Select
 
+'
+'
+'
+Function MsgRetorno(msg)
+  Set jsonRetorno = Server.CreateObject("Chilkat_9_5_0.JsonObject")
+  index = -1   
+  success = jsonRetorno.AddStringAt(-1,"Mensagem",msg)
+  success = jsonRetorno.AddStringAt(-1,"acao",acao)  
+  success = jsonRetorno.AddStringAt(-1,"id",id)
+  jsonRetorno.EmitCompact = 0
+  Response.Write jsonRetorno.Emit()  
+End Function
+
+'
+' Função para cadastro de novo usuário
+' 
 Function InserirNovoUsuario()
   Set cn = Server.CreateObject("ADODB.Connection")
   cn.Provider = "sqloledb"
@@ -36,7 +57,10 @@ Function InserirNovoUsuario()
   Response.Redirect("../AspPages/usuarioCadastro.asp?recaffected="&recaffected)
 End function
 
-Function EditarUsuario(id)
+'
+' Função para buscar e retornar um usuario
+'
+Function BuscaPorId(id)
   Set conexaoUsuario = Server.CreateObject("ADODB.Connection")
   conexaoUsuario.Provider = "sqloledb"
   conexaoUsuario.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
@@ -57,13 +81,73 @@ Function EditarUsuario(id)
   json.EmitCompact = 0
   Response.Write json.Emit()
 End Function
-Function MsgRetorno(msg)
-  Set jsonRetorno = Server.CreateObject("Chilkat_9_5_0.JsonObject")
-  index = -1   
-  success = jsonRetorno.AddStringAt(-1,"Mensagem",msg)
-  success = jsonRetorno.AddStringAt(-1,"acao",acao)  
-  success = jsonRetorno.AddStringAt(-1,"id",id)
-  jsonRetorno.EmitCompact = 0
-  Response.Write jsonRetorno.Emit()  
+
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function EditarUsuario(id)
+  Set cn = Server.CreateObject("ADODB.Connection")
+  cn.Provider = "sqloledb"
+  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
+  sql="UPDATE [dbo].[usuario] SET "
+  sql=sql & "[usuario] = '" & Request.Form("txtUsuario") & "',"
+  sql=sql & "[senha] = '" & Request.Form("pwdSenha") & "',"
+  sql=sql & "[nome] = '" & Request.Form("txtNome") & "',"
+  sql=sql & "[endereco] = '" & Request.Form("txtEndereco") & "',"
+  sql=sql & "[cidade] = '" & Request.Form("txtCidade") & "',"
+  sql=sql & "[cep] = '" & Request.Form("txtCep") & "',"
+  sql=sql & "[estadoid] = '" & Request.Form("selEstados") & "'"
+  sql=sql & "WHERE usuid="& id
+  on error resume next
+  cn.Execute sql
+  if err<>0 then
+    Response.Write("Sem permissão para editar usuários!")
+    Response.Redirect("../Usuario.html")
+  end if
+  cn.close
+  Response.Redirect("../UsuarioTabela.html")
 End Function
+
+'
+'Função para exclusão de usuário
+'
+Function ExcluirUsuario(id)
+  '
+  ' TODO - Validar se o usuário não possui tarefas antes da exclusão
+  '
+  Set cn = Server.CreateObject("ADODB.Connection")
+  cn.Provider = "sqloledb"
+  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")  
+  sql="DELETE FROM [dbo].[usuario] WHERE customerID='" & id & "'"
+  on error resume next
+  cn.Execute sql
+  if err<>0 then
+    Response.Write("Sem permissão para excluir usuário!")
+    Response.Redirect("../Usuario.html")
+  end if
+  cn.close
+  Response.Redirect("../UsuarioTabela.html")
+End Function
+'
+' Lista usuários para a tabela
+'
+Function ListarUsuarios()
+  Set cn = Server.CreateObject("ADODB.Connection")
+  cn.Provider = "sqloledb"
+  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
+  sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
+  Set rs=Server.CreateObject("ADODB.recordset")
+  rs.Open sql, cn, &H0001
+'criar objeto json
+' preencher o json
+' retornar ojson
+  Do While Not rs.EOF
+    for i = 0 to rs.Fields.Count - 1
+        rs.Fields(i)
+        usuID=rs.Fields.Item(0) 
+    next
+    rs.MoveNext
+  Loop
+  rs.close
+  cn.close
 %>

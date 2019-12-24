@@ -1,11 +1,3 @@
-<%
-  Set cn = Server.CreateObject("ADODB.Connection")
-  cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
-  Set rs=Server.CreateObject("ADODB.recordset")
-  rs.Open sql, cn, &H0001
-%>
 <!doctype html>
 <html lang="pt-br">
 
@@ -27,40 +19,22 @@
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
-        <% 
-          For i=0 to rs.Fields.Count - 1
-              Response.write("<th scope='col'>"&rs.Fields(i).Name&"</th>")
-          Next
-        %>
-        <th scope='col'>Ações</th>
+          <th scope='col'>Ações</th>
         </tr>
       </thead>
       <tbody>
-        <%
-            Do While Not rs.EOF
-              Response.Write "<tr>" 
-              for i = 0 to rs.Fields.Count - 1
-                  Response.Write "<td>" & rs.Fields(i) & "</td>"
-                  usuID=rs.Fields.Item(0) 
-              next
-              Response.Write "<th scope='col'>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-edit'></a>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-trash'></a>"
-              Response.Write "</th></tr>"
-              rs.MoveNext
-            Loop
-            rs.close
-            cn.close
-        %>
+        <th scope='col'>
+          <a href='usuariocadastro.asp?usuID=&usuID' class='fa fa-fw fa-edit'></a>
+          <a href='usuariocadastro.asp?usuID=&usuID' class='fa fa-fw fa-trash'></a>
+        </th>
+        </tr>
       </tbody>
     </table>
   </div>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+  <script src="./Scripts/Jquery-3.4.1.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
     crossorigin="anonymous"></script>
