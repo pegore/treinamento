@@ -37,7 +37,7 @@ function buscaDados(idUser) {
         return false;
     }
     var prForm = document.getElementById('frmUser');
-    // TODO - Melhor a forma de construção da url 
+    // TODO - Melhorar a forma de construção da url 
     return $.ajax({
         url: "./AspPages/user.asp?usuid=" + idUser + "&acao=Editar",
         data: "",
