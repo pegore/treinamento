@@ -16,7 +16,6 @@ function AdicionarEventos() {
 			e.preventDefault();
 			e.stopImmediatePropagation();
 			// -- Abrir página na div de id conteudo
-			debugger;
 			abrirPagina(e.currentTarget.href, '#conteudo');
 			return false;
 		}).on('click', 'a.abrir', e => {
@@ -98,7 +97,7 @@ function enviarAjax(prUrl, prMethod, prDados, prDoneCallBack, prFailCallBack) {
 		console.log(resultado);
 	});
 	var prFailCallBack = prFailCallBack || ((resultado) => {
-		alert('URI não encontrada: ' + prURL);
+		//alert('URI não encontrada: ' + prURL);
 		console.error(resultado);
 	});
 	return $.ajax({
@@ -106,7 +105,6 @@ function enviarAjax(prUrl, prMethod, prDados, prDoneCallBack, prFailCallBack) {
 		type: prMethod.toUpperCase(),
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/json',
 			'Cache-Control': 'no-cache',
 			'X-Requested-With': 'XMLHttpRequest',
 			'Access-Control-Allow-Origin': '*',

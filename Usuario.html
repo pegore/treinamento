@@ -1,30 +1,42 @@
-<form class="form-inline">
-  <div class="form-group">
-    <label for="txtPesquisaUsuario"></label>
-    <input type="text" name="txtPesquisaUsuario" id="txtPesquisaUsuario" class="form-control"
-      placeholder="nome para pesquisa" aria-describedby="helpId">
-      <button type="button" class="btn btn-primary" >Pesquisa Usuário</button>
+<div class="row align-items-start">
+  <div class="col">
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="txtPesquisaUsuario"></label>
+        <input type="text" name="txtPesquisaUsuario" id="txtPesquisaUsuario" class="form-control"
+          placeholder="nome para pesquisa" aria-describedby="helpId">
+        <button type="button" id="btnPesquisaUsuario" name="btnPesquisaUsuario" class="btn btn-primary">Pesquisa
+          Usuário</button>
+      </div>
+    </form>
   </div>
-</form>
-<div>
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Novo
-    Usuário</button>
+  <div class="col">
+    <button type="button" id="btnNovoUsuario" name="btnNovoUsuario" class="btn btn-primary" data-toggle="modal"
+      data-target=".bd-example-modal-lg">Novo
+      Usuário</button>
+  </div>
 </div>
-<h4>Tabela de usuários</h4>
-<table class="table table-bordered table-striped">
-  <thead>
-    <tr>
-      <th scope='col'>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    <th scope='col'>
-      <a href='usuario.asp?usuID=&usuID' class='fa fa-fw fa-edit link-editar'></a>
-      <a href='usuario.asp?usuID=&usuID' class='fa fa-fw fa-trash'></a>
-    </th>
-    </tr>
-  </tbody>
-</table>
+<div class="row align-items-end">
+  <div class="col">
+    <h4>Tabela de usuários</h4>
+    <table id="tblUsuario" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th scope='col'>Usuário</th>
+          <th scope='col'>Senha</th>
+          <th scope='col'>Nome</th>
+          <th scope='col'>Endereço</th>
+          <th scope='col'>Cidade</th>
+          <th scope='col'>Cep</th>
+          <th scope='col'>Estado</th>
+          <th scope='col'>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -83,3 +95,4 @@
     </div>
   </div>
 </div>
+<script src="./Scripts/Usuario.js" crossorigin="anonymous"></script>

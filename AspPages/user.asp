@@ -13,6 +13,8 @@ Select Case acao
     Call EditarUsuario(id)
   Case "Excluir"
     Call ExcluirUsuario(id)
+  Case "Pesquisa"
+    Call PesquisaUsuarios()
   Case "Listar"
     Call ListarUsuarios()
   Case else
@@ -64,9 +66,9 @@ Function BuscaPorId(id)
   Set conexaoUsuario = Server.CreateObject("ADODB.Connection")
   conexaoUsuario.Provider = "sqloledb"
   conexaoUsuario.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-  queryUsuarioById = "SELECT * FROM [treinamento].[dbo].[usuario] as us left join [treinamento].[dbo].[estado] as es on us.estadoid=es.estadoid where usuid="&id
+  queryUsuario = "SELECT * FROM [treinamento].[dbo].[usuario] as us left join [treinamento].[dbo].[estado] as es on us.estadoid=es.estadoid where usuid="&id
   Set recorSetUsuario=Server.CreateObject("ADODB.recordset")
-  recorSetUsuario.Open queryUsuarioById, conexaoUsuario, &H0001
+  recorSetUsuario.Open queryUsuario, conexaoUsuario, &H0001
   Set json = Server.CreateObject("Chilkat_9_5_0.JsonObject")
   index = -1   
   success = json.AddStringAt(-1,"txtUsuario",recorSetUsuario.Fields(1))
@@ -131,23 +133,47 @@ End Function
 '
 ' Lista usuários para a tabela
 '
-Function ListarUsuarios()
-  Set cn = Server.CreateObject("ADODB.Connection")
-  cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
-  Set rs=Server.CreateObject("ADODB.recordset")
-  rs.Open sql, cn, &H0001
-'criar objeto json
-' preencher o json
-' retornar ojson
-  Do While Not rs.EOF
-    for i = 0 to rs.Fields.Count - 1
-        rs.Fields(i)
-        usuID=rs.Fields.Item(0) 
-    next
-    rs.MoveNext
-  Loop
-  rs.close
-  cn.close
+Function PesquisaUsuarios()
+  valorPesquisa = Request.QueryString("vlrPesquisa")
+  Set conexaoUsuario = Server.CreateObject("ADODB.Connection")
+  conexaoUsuario.Provider = "sqloledb"
+  conexaoUsuario.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+  queryUsuario = "SELECT us.usuid,us.usuario,us.senha,us.nome,us.endereco,us.cidade,us.cep,es.nome as estado "
+  queryUsuario =queryUsuario & "FROM [treinamento].[dbo].[usuario] as us "
+  queryUsuario =queryUsuario & "left join [treinamento].[dbo].[estado] as es on us.estadoid=es.estadoid "
+  queryUsuario =queryUsuario & "where us.usuario like '%"&valorPesquisa&"%'" 
+  Set recorSetUsuario=Server.CreateObject("ADODB.recordset")
+  recorSetUsuario.Open queryUsuario, conexaoUsuario, &H0001
+  Set json = Server.CreateObject("Chilkat_9_5_0.JsonObject")
+  success = json.AddArrayAt(-1,"Usuarios")  
+  Set aUsuarios = json.ArrayAt(json.Size - 1)  
+  index = -1
+  Do Until recorSetUsuario.EOF
+    For Each x in recorSetUsuario.Fields
+      usuid=recorSetUsuario("usuid")
+      usuario=recorSetUsuario("usuario")
+      senha=recorSetUsuario("senha")
+      nome=recorSetUsuario("nome")
+      endereco=recorSetUsuario("endereco")
+      cidade=recorSetUsuario("cidade")
+      cep=recorSetUsuario("cep")
+      estado=recorSetUsuario("estado")
+    next   
+    success = aUsuarios.AddObjectAt(-1)
+    Set usuario = aUsuarios.ObjectAt(aUsuarios.Size - 1)
+    success = usuario.AddIntAt(-1,"UsuId",usuid)
+    'success = usuario.AddStringAt(-1,"Usuario",usuario)
+    success = usuario.AddStringAt(-1,"Senha",senha)
+    success = usuario.AddStringAt(-1,"Nome",nome)
+    success = usuario.AddStringAt(-1,"Endereco",endereco)
+    success = usuario.AddStringAt(-1,"Cidade",cidade)
+    success = usuario.AddStringAt(-1,"Cep",cep)
+    success = usuario.AddStringAt(-1,"Estado",estado)
+    recorSetUsuario.MoveNext
+  loop
+  recorSetUsuario.Close
+  conexaoUsuario.close
+  json.EmitCompact = 0
+  Response.Write json.Emit()  
+End Function  
 %>
