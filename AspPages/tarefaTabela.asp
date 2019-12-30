@@ -2,7 +2,7 @@
   Set cn = Server.CreateObject("ADODB.Connection")
   cn.Provider = "sqloledb"
   cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
+  sql = "SELECT * FROM [treinamento].[dbo].[tarefa]"
   Set rs=Server.CreateObject("ADODB.recordset")
   rs.Open sql, cn, &H0001
 %>
@@ -41,11 +41,11 @@
               Response.Write "<tr>" 
               for i = 0 to rs.Fields.Count - 1
                   Response.Write "<td>" & rs.Fields(i) & "</td>"
-                  usuID=rs.Fields.Item(0) 
+                  tarID=rs.Fields.Item(0) 
               next
               Response.Write "<th scope='col'>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-edit'></a>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"' class='fa fa-fw fa-trash'></a>"
+              Response.Write "<a href='tarefaCadastro.asp?tarID="&tarID&"' class='fa fa-fw fa-edit'></a>"
+              Response.Write "<a href='tarefaCadastro.asp?tarID="&tarID&"' class='fa fa-fw fa-trash'></a>"
               Response.Write "</th></tr>"
               rs.MoveNext
             Loop
