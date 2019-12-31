@@ -3,8 +3,8 @@ dim fUsuario
 dim fpassword
 fUsuario=Request.Form("txtUsuario")
 fpassword=Request.Form("pwdSenha")
-If fUsuario="" and fpassword="" Then
-    Response.Redirect("../Login.html")
+If fUsuario="" or fpassword="" Then
+    Response.Redirect("Index.html?login=vazio")
 End If
 sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuario='" & fUsuario & "' and senha='" & fpassword & "'"
 Set cn = Server.CreateObject("ADODB.Connection")
@@ -14,7 +14,7 @@ Set rs=Server.CreateObject("ADODB.recordset")
 rs.Open sql, cn, &H0001
 if rs.EOF Then
     rs.close
-    Response.Redirect("../Login.html")
+    Response.Redirect("Index.html?login=Invalido")
 end if
 Session("usuario") = rs("usuario")
 Session("senha") = rs("senha")
@@ -36,8 +36,8 @@ set cn = Nothing
 
 <body>
   <nav>    
-    <a href="./usuarioCadastro.asp?acao=Novo">Cadastro Usuários</a>
-    <a href="./usuarioTabela.asp?acao=Listar">Tabela de Usuários</a>
+    <a href="./usuarioCadastro.asp">Cadastro Usuários</a>
+    <a href="./usuarioTabela.asp">Tabela de Usuários</a>
     <a href="./tarefaCadastro.asp?acao=Inserir">Cadastro de Tarefas</a>
     <a href="./tarefaTabela.asp?acao=Listar">Tabela de Tarefas</a>
   </nav>  

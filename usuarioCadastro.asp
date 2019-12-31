@@ -6,30 +6,19 @@ stop
 acao = Request.QueryString("acao")
 id =  Request.QueryString("usuID")
 Select Case acao
-  Case "BuscaPorId"
-    Call BuscaPorId(id)
   Case "Inserir"
     Call InserirNovoUsuario()
-  Case "Novo"
-    Call NovoUsuario()
   Case "Editar"
     Call EditarUsuario(id)
   Case "Excluir"
     Call ExcluirUsuario(id)
+  Case "BuscaPorId"
+    Call BuscaPorId(id)
   Case "Pesquisa"
-    Call PesquisaUsuarios()
-  Case "Listar"
-    Call ListarUsuarios()
+    Call PesquisaUsuarios()  
   Case else
-    Call MsgRetorno("tttt")
+    Call LimparCampos()
 End Select
-
-'
-' mensagens de retorno para o usuario
-'
-Function MsgRetorno(msg)
-  Response.Write "Mensagem: " & msg
-End Function
 
 '
 ' Cria a conexao com o banco de dados
@@ -67,15 +56,15 @@ Function InserirNovoUsuario()
   Response.Redirect("usuarioCadastro.asp?acao="&acao&"&recaffected="&recaffected&"&msg="&msg)
 End function
 
-Function NovoUsuario()
-  'usuario=""
-  'senha=""
-  'nome=""
-  'endereco=""
-  'cidade=""
-  'cep=""
-  'estado=""
-  acao="Inserir"
+Function LimparCampos()
+  usuario=""
+  senha=""
+  nome=""
+  endereco=""
+  cidade=""
+  cep=""
+  estado=""
+  
 End Function
 
 '
@@ -94,10 +83,10 @@ Function BuscaPorId(id)
   endereco=recordSetUsuario.Fields.Item(4)
   cidade=recordSetUsuario.Fields.Item(5)
   cep=recordSetUsuario.Fields.Item(6)
-  estado=recordSetUsuario.Fields.Item(9)  
-  acao = "Editar"
+  'estado=recordSetUsuario.Fields.Item(9)    
   recordSetUsuario.Close
   conexaoUsuario.close 
+  
 End Function
 
 '
@@ -175,10 +164,7 @@ End Function
           <input type="password" id="pwdSenha" name="pwdSenha" value="<%=senha%>" placeholder="Senha">
         </div>
       </div>
-      <div class="central">
-      <%
-      Response.Write "Us: "& usuario
-      %>
+      <div class="central">      
         <label for="txtNome">Nome:</label>
         <div>
           <input type="text" id="txtNome" name="txtNome" value="<%=nome%>" placeholder="Nome">
@@ -222,9 +208,10 @@ End Function
           %>
           </select>
         </div>
-      </div>     
+      </div>           
       <div class="central">
         <button type="submit">Cadastrar</button>
+        <button type="submit">Atualizar</button>
       </div>
     </form>
   </div>
