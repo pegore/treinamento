@@ -1,5 +1,5 @@
 (function () {
-    debugger;
+    // debugger;
     verificarURL();
     adicionarEventos();
 })();
@@ -31,8 +31,8 @@ function verificarURL() {
 function mostraAlerta(mensagem) {
     var $alerta = document.getElementById("divAlerta");
     $alerta.innerHTML = mensagem;
-    $alerta.className += " show";
+    $alerta.classList.add('alerta-show');
     setTimeout(function () {
-        $alerta.className = $alerta.className.replace("show", "");
+        $alerta.className = $alerta.className.replace("alerta-show", "");
     }, 3000);
 }

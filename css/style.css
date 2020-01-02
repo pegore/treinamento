@@ -1,3 +1,8 @@
+body {
+  font-size: 20px;
+  height: 100vh;
+  margin: 0px;
+}
 .centralizar {
   display: -webkit-box;
   display: -moz-box;
@@ -6,7 +11,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   width: 100%;
 }
 
@@ -23,44 +27,42 @@
 .alerta {
   border: 1px solid gray;
   font-size: 18px;
-  visibility: hidden;
-  min-width: 250px;
-  margin-left: -125px;
+  display: none;
   text-align: center;
   border-radius: 3px;
   padding: 16px;
-  position: fixed;
+  /*position: fixed;*/
   z-index: 1;
-  left: 50%;
-  bottom: 30px;
+  /*left: 50%;
+  bottom: 30px;*/
 }
 
-.error {
+.alerta-error {
   border-color: #e8273b;
   color: #FFF;
   background-color: #ed5565;
 }
 
-.sucesso {
+.alerta-sucesso {
   border-color: #87c940;
   color: #FFF;
   background-color: #a0d468;
 }
 
-.atencao {
+.alerta-atencao {
   border-color: #f4a911;
   color: #FFF;
   background-color: #f6bb42;
 }
 
-.info {
+.alerta-info {
   border-color: #2f80e7;
   color: #FFF;
   background-color: #5d9cec;
 }
 
-.alerta.show {
-  visibility: visible;
+.alerta-show {
+  display: block;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
@@ -83,4 +85,122 @@
 @keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.center {
+  align-self: center;
+}
+
+.item-start {
+  align-self: flex-start;
+}
+
+.space-between {
+  justify-content: space-between
+}
+
+.spacing > :not(:first-child){
+margin-top: 10px;
+}
+
+.absolute-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.textfield {
+  height: 35px;
+  width: 100%;
+  padding-left: 5px;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+.button {
+  font-size: inherit;
+  height: 35px;
+  border-radius: 8px;
+  box-shadow: 0px;
+  width: 100%;
+}
+
+.button-primary {
+  background-color:green;
+  color: white;
+}
+
+.button-secondary {
+  background-color:lightskyblue;
+  color: black;
+}
+
+.button-danger {
+  background-color:red;
+  color: black;
+}
+
+.button-warning {
+  background-color:yellow;
+  color: black;
+}
+.form-group {
+  width: 100%;
+}
+.pl-sm {
+  padding-left:10px;
+  box-sizing: border-box;
+}
+.col {
+  flex-basis: auto;
+}
+.col-1 {
+  flex-basis: 8.333%;
+}
+.col-2 {
+  flex-basis: 16.666%;
+}
+.col-3 {
+  flex-basis: 25%;
+}
+.col-4 {
+  flex-basis: 33.333%;
+}
+.col-5 {
+  flex-basis: 41.666%;
+}
+.col-6 {
+  flex-basis: 50%;
+}
+.col-7 {
+  flex-basis: 58.33%;
+}
+.col-8 {
+  flex-basis: 66.666%;
+}
+.col-9 {
+  flex-basis: 75%;
+}
+.col-10 {
+  flex-basis: 83.333%;
+}
+.col-11 {
+  flex-basis: 91.666%;
+}
+.col-12 {
+  flex-basis: 100%;
 }

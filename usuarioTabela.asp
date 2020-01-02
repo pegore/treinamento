@@ -1,7 +1,8 @@
 <%
+stop
   Set cn = Server.CreateObject("ADODB.Connection")
   cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
+  cn.Open("Data Source=LINO-PC;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
   sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
   Set rs=Server.CreateObject("ADODB.recordset")
   rs.Open sql, cn, &H0001
