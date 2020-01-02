@@ -8,23 +8,20 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="column">
-  <header class="col-1">
-  <nav>    
-    <a href="./usuarioCadastro.asp">Cadastro Usuários</a>
-    <a href="./usuarioTabela.asp">Tabela de Usuários</a>
-    <a href="./tarefaCadastro.asp?acao=Inserir">Cadastro de Tarefas</a>
-    <a href="./tarefaTabela.asp?acao=Listar">Tabela de Tarefas</a>
-  </nav>  
-  <nav>    
-    <a href="./usuarioCadastro.html">Cadastro Usuários - HTML</a>
-    <a href="./usuarioTabela.html">Tabela de Usuários - HTML</a>
-    <a href="./tarefaCadastro.html">Cadastro de Tarefas - HTML</a>
-    <a href="./tarefaTabela.html">Tabela de Tarefas - HTML</a>
-  </nav>  
+<body>
+  <header>   
+    <nav class="topnav">    
+      <a href="./usuarioCadastro.html">Cadastro Usuários - HTML</a>
+      <a href="./usuarioTabela.html">Tabela de Usuários - HTML</a>
+      <a href="./tarefaCadastro.html">Cadastro de Tarefas - HTML</a>
+      <a href="./tarefaTabela.html">Tabela de Tarefas - HTML</a>
+      <a href="./index.html">Index</a>
+    </nav>  
 </header>
-<main class="centralizar col-11">
-    <form class="column spacing"  name="frmUser" action="usuarioCadastro.asp?acao=<%=acao%>" method="post">
+<main class="centralizar col-12">
+    <form class="column spacing"  name="frmUser" action="usuarioCadastro.asp" method="post">
+      <input type="hidden" name="acao" value="">
+      <input type="hidden" name="usuid" value="">
       <div class="row form-group items-center">
         <label class="col-2" for="txtUsuario">Usuário:</label>
         <input class="col-4 textfield" type="text" id="txtUsuario" name="txtUsuario" value="" placeholder="Usuário">      
@@ -75,8 +72,9 @@
         </select>
       </div>
       <div class="row">
-        <button type="submit" class="button button-primary col-6">Cadastrar</button>
-        <button type="submit" class="button button-warning col-6">Atualizar</button>
+        <button type="submit" class="button button-primary col-4">Cadastrar</button>
+        <button type="submit" class="button button-warning col-4">Alterar</button>
+        <button type="submit" class="button button-secondary col-4">Novo</button>
       </div>
     </form>
   </main>

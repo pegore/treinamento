@@ -1,9 +1,8 @@
 <%
-stop
   Set cn = Server.CreateObject("ADODB.Connection")
   cn.Provider = "sqloledb"
-  cn.Open("Data Source=LINO-PC;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT * FROM [treinamento].[dbo].[usuario]"
+  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
+  sql = "SELECT [nome],[usuario],[endereco],[cidade],[cep],[usuid] FROM [treinamento].[dbo].[usuario]"
   Set rs=Server.CreateObject("ADODB.recordset")
   rs.Open sql, cn, &H0001
 %>
@@ -11,45 +10,83 @@ stop
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema de Tarefas</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tarefas</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <div class="centralizar">
-    <table >
-      <thead>
-        <tr>
-        <% 
-          For i=0 to rs.Fields.Count - 1
-              Response.write("<th>"&rs.Fields(i).Name&"</th>")
-          Next
-        %>
-        <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%
-            Do While Not rs.EOF
-              Response.Write "<tr>" 
-              for i = 0 to rs.Fields.Count - 1
-                  Response.Write "<td>" & rs.Fields(i) & "</td>"
-                  usuID=rs.Fields.Item(0) 
+  <header>
+    <nav class="topnav">
+      <a href="./usuarioCadastro.asp">Cadastro Usuários</a>
+      <a href="./usuarioTabela.asp">Tabela de Usuários</a>
+      <a href="./tarefaCadastro.asp">Cadastro de Tarefas</a>
+      <a href="./tarefaTabela.asp">Tabela de Tarefas</a>
+      <a href="./index.html">Index</a>
+    </nav>
+  </header>
+  <main class="col-12">
+    <div class="centralizar">
+      <table class="table">
+        <caption >
+          <a href="usuarioCadastro.html">Novo Usuário</a>
+        </caption>
+        <thead>
+          <tr>
+            <%
+              for each x in rs.Fields
+               if x.name<>"usuid" then
+                Response.write("<th>" & ucase(x.name) & "</th>")
+                end if
               next
-              Response.Write "<th>"
-              Response.Write "<a href='usuariocadastro.asp?acao=BuscaPorId&usuID="&usuID&"' >Editar</a>"
-              Response.Write "<a href='usuariocadastro.asp?usuID="&usuID&"'>Excluir</a>"
-              Response.Write "</th></tr>"
-              rs.MoveNext
-            Loop
-            rs.close
-            cn.close
-        %>
-      </tbody>
-    </table>
-  </div>
+            %>
+            <th>AÇÕES</th>
+          </tr>
+        </thead>
+        <tbody>
+        <%
+          stop
+          Do Until rs.EOF
+            Response.Write "<tr>" 
+            for each x in rs.Fields
+              if x.name<>"usuid" then
+                Response.Write "<td>" & x.value & "</td>"
+              end if
+            next
+            Response.Write "<td><a href='usuarioCadastro.html?usuid="&rs.Fields.Item(5)&"'><img src='./Images/editar.png' alt='Editar'></a></td>"
+            Response.Write "</tr>"
+            rs.MoveNext
+          Loop
+          rs.close
+          cn.close
+        %>          
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan=100%>
+              <div class="pagination">
+                <ul>
+                  <a href="#">
+                    <li>
+                      <<</li> </a> <a href="#">
+                    <li>
+                      <</li> </a> <input type="text" name="" id="">
+                        <a href="#">
+                    <li>></li>
+                  </a>
+                  <a href="#">
+                    <li>>></li>
+                  </a>
+                  <li>Mostrando 2 de 2 registros</li>
+                </ul>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </main>
 </body>
 
 </html>

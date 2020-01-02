@@ -3,6 +3,7 @@ body {
   height: 100vh;
   margin: 0px;
 }
+
 .centralizar {
   display: -webkit-box;
   display: -moz-box;
@@ -68,23 +69,47 @@ body {
 }
 
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 .column {
@@ -115,8 +140,8 @@ body {
   justify-content: space-between
 }
 
-.spacing > :not(:first-child){
-margin-top: 10px;
+.spacing> :not(:first-child) {
+  margin-top: 10px;
 }
 
 .absolute-center {
@@ -131,6 +156,7 @@ margin-top: 10px;
   box-sizing: border-box;
   font-size: 15px;
 }
+
 .button {
   font-size: inherit;
   height: 35px;
@@ -140,67 +166,150 @@ margin-top: 10px;
 }
 
 .button-primary {
-  background-color:green;
+  background-color: green;
   color: white;
 }
 
 .button-secondary {
-  background-color:lightskyblue;
+  background-color: lightskyblue;
   color: black;
 }
 
 .button-danger {
-  background-color:red;
+  background-color: red;
   color: black;
 }
 
 .button-warning {
-  background-color:yellow;
+  background-color: yellow;
   color: black;
 }
+
 .form-group {
   width: 100%;
 }
+
 .pl-sm {
-  padding-left:10px;
+  padding-left: 10px;
   box-sizing: border-box;
 }
+
 .col {
   flex-basis: auto;
 }
+
 .col-1 {
   flex-basis: 8.333%;
 }
+
 .col-2 {
   flex-basis: 16.666%;
 }
+
 .col-3 {
   flex-basis: 25%;
 }
+
 .col-4 {
   flex-basis: 33.333%;
 }
+
 .col-5 {
   flex-basis: 41.666%;
 }
+
 .col-6 {
   flex-basis: 50%;
 }
+
 .col-7 {
   flex-basis: 58.33%;
 }
+
 .col-8 {
   flex-basis: 66.666%;
 }
+
 .col-9 {
   flex-basis: 75%;
 }
+
 .col-10 {
   flex-basis: 83.333%;
 }
+
 .col-11 {
   flex-basis: 91.666%;
 }
+
 .col-12 {
   flex-basis: 100%;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead, tfoot {
+  background-color: #aaa;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #DDD;
+}
+
+.pagination ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+ 
+}
+.pagination li{  
+  display: inline-block;
+}
+.pagination input {
+  width: 40px;
+  padding: 4px;
+  margin: auto 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  margin: auto 5px;
+  padding: 2px;
+  color: #222;  
+  background-color: lightblue;
+  border: 1px solid black;
 }
