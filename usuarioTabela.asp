@@ -9,20 +9,17 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Tarefas</title>
-  <link rel="stylesheet" href="css/style.css">
+<head>  
+  <!--#include file="./Includes/HtmlSecaoHead.inc"--> 
 </head>
 
 <body>
-   <!--#include file="./AspPages/TopMenu.inc"-->
+   <!--#include file="./Includes/TopMenu.inc"-->
   <main class="col-12">
     <div class="centralizar">
       <table class="table">
         <caption >
-          <a href="usuarioCadastro.html">Novo Usuário</a>
+          <a href="usuarioCadastro.asp">Novo Usuário</a>
         </caption>
         <thead>
           <tr>
@@ -38,7 +35,6 @@
         </thead>
         <tbody>
         <%
-          stop
           Do Until rs.EOF
             Response.Write "<tr>" 
             for each x in rs.Fields
