@@ -114,6 +114,7 @@ body {
 
 .column {
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
   flex-wrap: wrap;
 }
@@ -186,7 +187,7 @@ body {
 }
 
 .form-group {
-  width: 100%;
+  width: 100%;  
 }
 
 .pl-sm {
@@ -312,4 +313,7 @@ tr:nth-child(even) {
   color: #222;  
   background-color: lightblue;
   border: 1px solid black;
+}
+.no-wrap{
+  flex-wrap:nowrap;
 }

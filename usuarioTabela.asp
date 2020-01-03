@@ -17,15 +17,7 @@
 </head>
 
 <body>
-  <header>
-    <nav class="topnav">
-      <a href="./usuarioCadastro.asp">Cadastro Usuários</a>
-      <a href="./usuarioTabela.asp">Tabela de Usuários</a>
-      <a href="./tarefaCadastro.asp">Cadastro de Tarefas</a>
-      <a href="./tarefaTabela.asp">Tabela de Tarefas</a>
-      <a href="./index.html">Index</a>
-    </nav>
-  </header>
+   <!--#include file="./AspPages/TopMenu.inc"-->
   <main class="col-12">
     <div class="centralizar">
       <table class="table">
