@@ -2,10 +2,9 @@
   Set cn = Server.CreateObject("ADODB.Connection")
   cn.Provider = "sqloledb"
   cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
-  sql = "SELECT [tarID],[tarTitulo] as 'Título',[geradorID] as 'Descrição',[tarData] as 'Data de Abertura',[tarStatus] as 'Status'FROM [treinamento].[dbo].[tarefa]"
+  sql = "SELECT tar.tarID,tar.tarTitulo,us.nome,tar.tarData,tar.tarStatus FROM [treinamento].[dbo].[tarefa] as tar left join [treinamento].[dbo].[usuario] as us on tar.geradorID=us.usuid"
   Set rs=Server.CreateObject("ADODB.recordset")
   rs.Open sql, cn, &H0001
-  stop
 %>
 <!doctype html>
 <html lang="pt-br">
@@ -24,20 +23,20 @@
           <tr>
             <th>N°</th>
             <th>Título</th>
-            <th>Descrição</th>
+            <th>Usuário Gerador</th>
             <th>Data de Abertura</th>
-            <th>Status</th>           
-            <th>Editar</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
         <%
           Do Until rs.EOF
-            Response.Write "<tr>" 
-            for each x in rs.Fields
-                Response.Write "<td>" & x.value & "</td>"
-            next
-            Response.Write "<td><a href='tarefaCadastro.asp?tarId="&rs.Fields.Item(0)&"'><img src='./Images/editar.png' alt='Editar'></a></td>"
+            Response.Write "<tr>"
+            Response.Write "<td>" & rs("tarID") & "</td>"
+            Response.Write "<td>" & rs("tarTitulo") & "</td>"
+            Response.Write "<td>" & rs("nome") & "</td>"
+            Response.Write "<td>" & rs("tarData") & "</td>"
+            Response.Write "<td><a href='tarefaCadastro.asp?tarId="&rs("tarID")&"'><img src='./Images/"& rs("tarStatus")&".gif' alt='Editar'></a></td>"
             Response.Write "</tr>"
             rs.MoveNext
           Loop
