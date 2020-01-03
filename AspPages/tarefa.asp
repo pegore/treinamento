@@ -2,7 +2,9 @@
 '
 'Seleção das funções a serem realizadas
 '
+stop
 acao = Request("acao")
+acao = "BuscaPorId"
 id = 1' Request("usuID")
 Select Case acao
   Case "Inserir"
@@ -20,19 +22,12 @@ Select Case acao
 End Select
 
 '
-' Cria a conexao com o banco de dados
-'
-Function CriaConexao()
-  Set conexaoUsuario = Server.CreateObject("ADODB.Connection")
-  conexaoUsuario.Provider = "sqloledb"
-  conexaoUsuario.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
-  CriaConexao = conexaoUsuario  
-End Function
-  
+' Função para inserir nova Tarefa
+'  
 Function InserirNovaTarefa()
-  Set cn = Server.CreateObject("ADODB.Connection")
-  cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+  Set conexaoTarefa = Server.CreateObject("ADODB.Connection")
+  conexaoTarefa.Provider = "sqloledb"
+  conexaoTarefa.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
   sql="INSERT INTO [dbo].[tarefa]([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES ("  
   sql=sql & "'" & Request.Form("txtTitulo") & "',"
   sql=sql & "'" & Request.Form("selGerador") & "',"
@@ -40,12 +35,12 @@ Function InserirNovaTarefa()
   sql=sql & "'" & Request.Form("selStatus") & "',"
   sql=sql & "'" & Request.Form("txtDescricao") & "')"
   on error resume next
-  cn.Execute sql, recaffected
+  conexaoTarefa.Execute sql, recaffected
   if err<>0 then
     msg = "Registro não gravado"
     Response.Redirect("./tabelaCadastro.asp?msg="&msg)
   end if
-  cn.close
+  conexaoTarefa.close
   msg = "Registro gravado com sucesso"    
   Response.Redirect("./tarefaCadastro.asp?&recaffected="&recaffected&"&msg="&msg)
 End function
@@ -59,6 +54,23 @@ Function LimparCampos()
   cep=""
   estado=""
   
+End Function
+
+Function BuscaPorId(id)
+stop
+  Set conexaoTarefa = Server.CreateObject("ADODB.Connection")
+  conexaoTarefa.Provider = "sqloledb"
+  conexaoTarefa.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+  queryTarefa = "SELECT tar.tarID,tar.tarTitulo,us.nome,tar.tarData,tar.tarStatus FROM [treinamento].[dbo].[tarefa] as tar left join [treinamento].[dbo].[usuario] as us on tar.geradorID=us.usuid where usuid="&id
+  Set recordSetTarefas=Server.CreateObject("ADODB.recordset")
+  recordSetTarefas.Open queryTarefa, conexaoTarefa, &H0001
+  id=recordSetTarefas("tarId")
+  titulo=recordSetTarefas("tarTitulo")
+  nomeUsuario=recordSetTarefas("nome")
+  dataAbertura=recordSetTarefas("tarData")
+  status=recordSetTarefas("tarStatus")
+  recordSetTarefas.Close
+  conexaoTarefa.close   
 End Function
 
 %>

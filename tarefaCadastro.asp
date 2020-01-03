@@ -21,8 +21,7 @@
       <input type="hidden" name="tarId" value="">      
       <div class="row form-group items-center">
           <label class="col-3" for="txtTitulo" >Título:</label>
-          <input type="text" class="col-9 textfield" id="txtTitulo" name="txtTitulo" 
-            placeholder="Título da tarefa">
+          <input type="text" class="col-9 textfield" id="txtTitulo" name="txtTitulo" value="<%=titulo%>"placeholder="Título da tarefa">
       </div>
       <div class="row form-group items-center">
         <label class="col-3" for="selEstados">Gerador:</label>
