@@ -1,0 +1,76 @@
+<%
+Class Conexao
+    '
+    ' Propriedades da classe
+    '
+    Private DataSource
+    Private DataBase
+    Private Usuario
+    Private Senha
+
+    '
+    ' Métodos Get e Set de cada propriedade
+    '
+    Public function getDataSource()
+        getDataSource = DataSource
+    End function
+
+    Public sub setDataSource(byval p_dataSource)
+        DataSource = p_dataSource
+    End sub	
+    
+    Public function getDataBase()
+        getDataBase = DataBase
+    End function
+
+    Public sub setDataBase(byval p_dataBase)
+        DataBase = p_dataBase
+    End sub	
+
+    Public function getUsuario()
+        getUsuario = Usuario
+    End function
+
+    Public sub setUsuario(byval p_usuario)
+        Usuario = p_usuario
+    End sub	
+
+    Public function getSenha()
+        getSenha = Senha
+    End function
+
+    Public sub setSenha(byval p_senha)
+        Senha = p_senha
+    End sub	
+
+    '
+    ' Métodos complementares  
+    '
+  
+    'Abre uma conexao
+    public function AbreConexao()
+        '
+        ' TODO Lógica de abertura de uma conexão
+        '
+        dim stringConexao 
+        DatasourceString = "Data Source="&DataSource&"localhost;"
+        DataBaseString="Initial Catalog="&DataBase&"treinamento;"
+        UsuarioString="User Id="&Usuario&"sa;"
+        SenhaString="Password="&Senha&"123456;"
+        stringConexao=DatasourceString & DataBaseString & UsuarioString & SenhaString
+        Set cn = Server.CreateObject("ADODB.Connection")
+        cn.Provider = "sqloledb"
+        cn.Open(stringConexao)
+		set AbreConexao = cn
+	end function
+    
+    'Fecha uma conexão
+    public function FecharConexao(cn)
+        '
+        ' TODO Lógica para fechamento de uma conexão
+        '
+        cn.Close()
+	end function
+End Class
+
+%>

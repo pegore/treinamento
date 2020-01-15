@@ -1,9 +1,5 @@
-<!--#include file="./Includes/Conexao.inc"-->
-<%   
-  sql = "SELECT [nome],[usuario],[endereco],[cidade],[cep],[usuid] FROM [treinamento].[dbo].[usuario]"
-  Set rs=Server.CreateObject("ADODB.recordset")
-  rs.Open sql, cn, &H0001
-%>
+<!--#include file="./Class/Conexao.class"-->
+<!--#include file="./Class/Usuario.class"-->
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -22,6 +18,11 @@
         <thead>
           <tr>
             <%
+            set ObjConexao = new Conexao
+            set getConexao = ObjConexao.AbreConexao()
+            set ObjUsuario = new Usuario
+            set rs = objUsuario.BuscarUsuarios(getConexao)
+            stop
               for each x in rs.Fields
                if x.name<>"usuid" then
                 Response.write("<th>" & ucase(x.name) & "</th>")
@@ -45,7 +46,7 @@
             rs.MoveNext
           Loop
           rs.close
-          cn.close
+          ObjConexao.FecharConexao(getConexao)
         %>          
         </tbody>
         <tfoot>
