@@ -1,7 +1,5 @@
-<%
-  Set cn = Server.CreateObject("ADODB.Connection")
-  cn.Provider = "sqloledb"
-  cn.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")    
+<!--#include file="./Includes/Conexao.inc"-->
+<%  
   sql = "SELECT tar.tarID,tar.tarTitulo,us.nome,tar.tarData,tar.tarStatus FROM [treinamento].[dbo].[tarefa] as tar left join [treinamento].[dbo].[usuario] as us on tar.geradorID=us.usuid"
   Set rs=Server.CreateObject("ADODB.recordset")
   rs.Open sql, cn, &H0001
@@ -36,7 +34,7 @@
             Response.Write "<td>" & rs("tarTitulo") & "</td>"
             Response.Write "<td>" & rs("nome") & "</td>"
             Response.Write "<td>" & rs("tarData") & "</td>"
-            Response.Write "<td><a href='tarefaCadastro.asp?tarId="&rs("tarID")&"'><img src='./Images/"& rs("tarStatus")&".gif' alt='Editar'></a></td>"
+            Response.Write "<td><a href='tarefaCadastro.asp?acao=Editar&tarId="&rs("tarID")&"&Status="& rs("tarStatus")&"'><img src='./Images/"& rs("tarStatus")&".gif' alt='Editar'></a></td>"
             Response.Write "</tr>"
             rs.MoveNext
           Loop

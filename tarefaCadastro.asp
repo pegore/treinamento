@@ -1,4 +1,4 @@
-
+<!--#include file="./Includes/Conexao.inc"-->
 <!--#include file="./AspPages/tarefa.asp"-->
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -10,11 +10,23 @@
 <body>
    <!--#include file="./Includes/TopMenu.inc"-->
 <% 
-    msg = Request.QueryString("msg")
-    if(msg<>"") then
-      Response.Write "<div class='alerta sucesso'>"&msg&"</div>"
-    End If
-    %>
+  msg = Request.QueryString("msg")
+  if(msg<>"") then
+    Response.Write "<div class='alerta sucesso'>"&msg&"</div>"
+  End If
+  stop
+  if (tarId<>0) then
+    queryTarefa = "SELECT tar.tarID,tar.tarTitulo,us.nome,tar.tarData,tar.tarStatus FROM [treinamento].[dbo].[tarefa] as tar left join [treinamento].[dbo].[usuario] as us on tar.geradorID=us.usuid where usuid="&id
+    Set recordSetTarefas=Server.CreateObject("ADODB.recordset")
+    recordSetTarefas.Open queryTarefa, cn, &H0001
+    id=recordSetTarefas("tarId")
+    titulo=recordSetTarefas("tarTitulo")
+    nomeUsuario=recordSetTarefas("nome")
+    dataAbertura=recordSetTarefas("tarData")
+    status=recordSetTarefas("tarStatus")
+    recordSetTarefas.Close
+  end if
+%>
 <main class="centralizar col-12">
     <form name="frmTarefa" class="column spacing" action="tarefaCadastro.asp" method="post">     
       <input type="hidden" name="acao" value="Inserir">
@@ -29,7 +41,7 @@
          <%
             Set conexaoUsuario = Server.CreateObject("ADODB.Connection")
             conexaoUsuario.Provider = "sqloledb"
-            conexaoUsuario.Open("Data Source=localhost;Initial Catalog=treinamento;User Id=sa;Password=123456;")
+            conexaoUsuario.Open("Data Source=LINO-PC;Initial Catalog=treinamento;User Id=sa;Password=123456;")
             sqlUsuario = "SELECT usuid,nome FROM [treinamento].[dbo].[usuario]"
             Set recordSetUsuario=Server.CreateObject("ADODB.recordset")
             recordSetUsuario.Open sqlUsuario, conexaoUsuario, &H0001
