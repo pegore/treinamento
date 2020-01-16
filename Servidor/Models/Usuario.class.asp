@@ -1,6 +1,5 @@
 <%
-
-Class Usuario
+Class cUsuario
     '
     ' Propriedades da classe
     '
@@ -114,12 +113,21 @@ Class Usuario
 	end function
 
     'Buscar um usuário
-    public function BuscarUsuarioPorId(Id)
+    public function BuscarUsuarioPorNomeSenha(cn,usuario,senha)
         '
         ' TODO Lógica para busca de usuários
         '
-		set BuscarUsuarios = rs
-	end function
+		stop
+        sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuario='" & usuario & "' and senha='" & senha & "'" 
+        Set rs=Server.CreateObject("ADODB.recordset")
+        rs.Open sql, cn, &H0001
+        set ObjRetorno = new cUsuario
+        ObjRetorno.setUsuario(rs("usuario"))
+        ObjRetorno.setSenha(rs("senha"))
+        ObjRetorno.setId(rs("usuid"))
+        set BuscarUsuarioPorNomeSenha = ObjRetorno
+    end function
 End Class
+
 
 %>

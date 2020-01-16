@@ -51,13 +51,19 @@ Class Conexao
     public function AbreConexao()
         '
         ' TODO Lógica de abertura de uma conexão
+        ' precisa ter uma forma de pegar os dados da conexão de um arquivo de configuração
+        ' quer seja um arquivo de variáveis de ambiente, ou um web.config
+        ' precisa ter os seguintes valores no arquivo ou variavel de ambiente:
+        '   - Datasource
+        '   - DataBase
+        '   - Usuario
+        '   - Senha 
         '
-        dim stringConexao 
-        DatasourceString = "Data Source="&DataSource&"localhost;"
-        DataBaseString="Initial Catalog="&DataBase&"treinamento;"
-        UsuarioString="User Id="&Usuario&"sa;"
-        SenhaString="Password="&Senha&"123456;"
-        stringConexao=DatasourceString & DataBaseString & UsuarioString & SenhaString
+        dim DataSource : DataSource= "localhost"
+        dim DataBase : DataBase = "treinamento"
+        dim Usuario : Usuario = "sa"
+        dim Senha : Senha = "123456"
+        dim stringConexao : stringConexao = "Data Source=" & Datasource & ";Initial Catalog=" & DataBase & ";User Id=" & Usuario & ";Password=" & Senha
         Set cn = Server.CreateObject("ADODB.Connection")
         cn.Provider = "sqloledb"
         cn.Open(stringConexao)
@@ -71,6 +77,4 @@ Class Conexao
         '
         cn.Close()
 	end function
-End Class
-
-%>
+End Class%>

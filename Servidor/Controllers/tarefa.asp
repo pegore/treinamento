@@ -36,7 +36,7 @@ End Function
 '  
 Function InserirNovaTarefa()
   stop
-  sql="INSERT INTO [dbo].[tarefa] ([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES ("  
+  sql="INSERT INTO [dbo].[tarefa] ([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES (" & 
   sql=sql & "'" & Request.Form("txtTitulo") & "',"
   sql=sql & "'" & Request.Form("selGerador") & "',"
   sql=sql & "'" & CDATE(Request.Form("txtData")) & "',"
