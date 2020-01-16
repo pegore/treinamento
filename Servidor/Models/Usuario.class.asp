@@ -100,7 +100,7 @@ Class cUsuario
 		set UpadateUsuario = rs
 	end function
 
-    'Buscar usuários
+    'Buscar usuários do banco de dados
     public function BuscarUsuarios(cn)
         '
         ' TODO Lógica para busca de usuários
@@ -112,7 +112,7 @@ Class cUsuario
 		set BuscarUsuarios = rs
 	end function
 
-    'Buscar um usuário
+    'Buscar um usuário para efetuar o login
     public function BuscarUsuarioPorNomeSenha(cn,usuario,senha)
         '
         ' TODO Lógica para busca de usuários
@@ -121,11 +121,7 @@ Class cUsuario
         sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuario='" & usuario & "' and senha='" & senha & "'" 
         Set rs=Server.CreateObject("ADODB.recordset")
         rs.Open sql, cn, &H0001
-        set ObjRetorno = new cUsuario
-        ObjRetorno.setUsuario(rs("usuario"))
-        ObjRetorno.setSenha(rs("senha"))
-        ObjRetorno.setId(rs("usuid"))
-        set BuscarUsuarioPorNomeSenha = ObjRetorno
+        set BuscarUsuarioPorNomeSenha = rs
     end function
 End Class
 

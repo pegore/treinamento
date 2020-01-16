@@ -2,29 +2,25 @@
 <!--#include file="../Models/Usuario.class.asp"-->
 <%
 stop
-dim msg : msg="Usuário ou senha inválida"
+dim logado : logado = false
 dim usuario : usuario=Request.Form("usuario")
 dim senha : senha=Request.Form("senha")
 
 set ObjConexao = new Conexao
-set getConexao = ObjConexao.AbreConexao()
+set cn = ObjConexao.AbreConexao()
 set ObjUsuario = new cUsuario
-ObjUsuario.setUsuario = usuario
-ObjUsuario.setSenha = senha
+set rs = objUsuario.BuscarUsuarioPorNomeSenha(cn, usuario, senha)
 
-set usuario = objUsuario.BuscarUsuarioPorNomeSenha(getConexao, usuario, senha)
-
-
-
-
-
-if usuario<>"" Then
-    Session("usuario") = usuario.setUsuario
-    Session("senha") = usuario.setSenha
-    Session("codigo") = usuario.setId
-    msg = "Logado com Sucesso"
+if rs.EOF<>"" Then
+    Session("usuario") = rs("usuario")
+    Session("senha") = rs("senha")
+    Session("codigo") = rs("usuid")
+    logado = true
 end if
-ObjConexao.FecharConexao()
-ObjConexao=nothing
-Response.Write(msg) 
+ObjConexao.FecharConexao(cn)
+Set json = Server.CreateObject("Chilkat_9_5_0.JsonObject")
+index = -1   
+success = json.AddStringAt(-1,"logado",logado)
+json.EmitCompact = 0
+Response.Write json.Emit()
 %>

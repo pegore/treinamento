@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    debugger;
     AdicionarEventos();
 });
 
-function AdicionarEventos() { 
-    debugger; 
+function AdicionarEventos() {
     var $usuario = document.getElementById("txtUsuario");
     var $senha = document.getElementById("pwdSenha");
-    $btnLogin = document.getElementById("btnLogin");
+    var $btnLogin = document.getElementById("btnLogin");
     $usuario.addEventListener('focusout', function (e) {
         debugger
         if ($usuario.value == "") {
@@ -21,9 +19,8 @@ function AdicionarEventos() {
             mostraAlerta("Preencha o campo senha!!!");
             $senha.focus();
         }
-    });   
+    });
     $btnLogin.addEventListener("click", function () {
-        debugger
         $txtUsuario = document.getElementById("txtUsuario").value;
         $pwdSenha = document.getElementById("pwdSenha").value;
         if (!validaForm($txtUsuario, $pwdSenha)) {
@@ -36,7 +33,7 @@ function AdicionarEventos() {
 function validaForm(usuario, senha) {
     if (!usuario || !senha) {
         alert('Preencha os campos');
-        return false
+        return false;
     }
     return true;
 }
@@ -48,17 +45,21 @@ function fazerLogin(usuario, senha) {
         "usuario": usuario,
         "senha": senha
     };
-    debugger;
     return $.ajax({
         url: "../Servidor/Controllers/login.asp",
         type: 'POST',
         data: data,
         success: function (data) {
-            alert(data);
-            window.location.replace("./Principal.asp");
+            debugger;
+            if (data.Logado) {
+                alerta("Logado com sucesso");
+                window.location.replace("./Principal.asp");
+            } else {
+                alert("erro no login");
+            }
         },
         error: function (xhr, status, error) {
-            alert("Erro: " + xhr + status + error);
+            alert("XHR: " + xhr + "\r\nstatus: " + status + "\r\nerror: " + error);
         }
     });
 }
