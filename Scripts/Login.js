@@ -1,9 +1,10 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     AdicionarEventos();
 });
 
 function AdicionarEventos() {
-    // Atrelar os eventos da página    
+    // Atrelar os eventos da página   
+    debugger; 
     $btnLogin = document.getElementById("btnLogin");
     $btnLogin.addEventListener("click", function () {
         $txtUsuario = document.getElementById("txtUsuario").value;
@@ -23,14 +24,14 @@ function validaForm(usuario, senha) {
     return true;
 }
 function fazerLogin(usuario, senha) {
-    if (!usuario || !senha) {
-        alert('Preencha os campos');
-        return false
+    if (!validaForm(usuario, senha)) {
+        return false;
     };
     data = {
         "usuario": usuario,
         "senha": senha
     };
+    debugger;
     return $.ajax({
         url: "./AspPages/Login.asp",
         type: 'POST',
@@ -40,7 +41,7 @@ function fazerLogin(usuario, senha) {
             window.location.replace("./Index.html");
         },
         error: function (xhr, status, error) {
-            alert("Erro: " + error.Message);
+            alert("Erro: " + xhr + status + error);
         }
     });
 }
