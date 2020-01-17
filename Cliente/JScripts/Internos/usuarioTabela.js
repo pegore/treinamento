@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     //AdicionarEventos();
-    BuscarUsuarios("BuscarUsuariosPaginadosJson", 20, 1);
+    BuscarUsuarios("BuscarUsuariosPaginados", 20, 1);
 });
 
 function AdicionarEventos() {
@@ -15,7 +15,7 @@ function AdicionarEventos() {
     */
     $body = document.getElementsByTagName("BODY")[0];
     $body.addEventListener("load", function () {
-        BuscarUsuarios("BuscarUsuariosPaginadosJson", 10, 1);
+        BuscarUsuarios("BuscarUsuariosPaginados", 10, 1);
     });
 }
 
@@ -35,7 +35,7 @@ function BuscarUsuarios(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
         success: function (data) {
             debugger;
             registros = JSON.parse(data);
-            PreencheTabela(registros.Registros);
+            //PreencheTabela(registros.Registros);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);

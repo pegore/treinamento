@@ -45,6 +45,7 @@
         PaginaPesquisa = 1			
       End If    
       rs.AbsolutePage = PaginaPesquisa
+      Response.ContentType = "application/json"
       Response.Write "{"
       Response.Write """TotalRegistros"":" & numeroTotalRegistros & ","
       Response.Write """RegistrosPorPagina"":" & RegistrosPorPagina & ","
