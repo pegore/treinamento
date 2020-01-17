@@ -25,6 +25,7 @@
         </form>
     </div>
     <!--#include file="Includes\JScripts.inc"--> 
+    <script src="JScripts/Internos/Logon.js" type="text/javascript"></script>
 </body>
 
 </html>

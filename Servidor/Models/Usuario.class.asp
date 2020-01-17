@@ -101,23 +101,26 @@ Class cUsuario
 	end function
 
     'Buscar usuários do banco de dados
-    public function BuscarUsuarios(cn)
+    public function BuscarUsuarios(cn, palavraParaPesquisa)
         '
         ' TODO Lógica para busca de usuários
         '
-        stop
-        sql = "SELECT [nome],[usuario],[endereco],[cidade],[cep],[usuid] FROM [treinamento].[dbo].[usuario]"
+        ' definir o SQL para pesquisa de acordo com a entrada
+        ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
+        sql = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] FROM [treinamento].[dbo].[usuario]"
+        sqlPesquisa = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] "
+        sqlPesquisa = sqlPesquisa & "FROM [treinamento].[dbo].[usuario] WHERE [usuario] LIKE '%"
+        sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
         Set rs=Server.CreateObject("ADODB.recordset")
-        rs.Open sql, cn, &H0001
+        rs.CursorLocation = 3 ' adUseClient
+        rs.Open sqlPesquisa, cn, &H0001
 		set BuscarUsuarios = rs
 	end function
 
+    '
     'Buscar um usuário para efetuar o login
-    public function BuscarUsuarioPorNomeSenha(cn,usuario,senha)
-        '
-        ' TODO Lógica para busca de usuários
-        '
-		stop
+    '
+    public function BuscarUsuarioPorNomeSenha(cn,usuario,senha)        
         sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuario='" & usuario & "' and senha='" & senha & "'" 
         Set rs=Server.CreateObject("ADODB.recordset")
         rs.Open sql, cn, &H0001

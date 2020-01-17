@@ -49,19 +49,30 @@ function fazerLogin(usuario, senha) {
         url: "../Servidor/Controllers/login.asp",
         type: 'POST',
         data: data,
-        success: function (data) {
-            debugger;
-            if (data.Logado) {
-                alerta("Logado com sucesso");
-                window.location.replace("./Principal.asp");
-            } else {
-                alert("erro no login");
-            }
+        success: function(data){
+            ValidaLogin(data);
         },
-        error: function (xhr, status, error) {
-            alert("XHR: " + xhr + "\r\nstatus: " + status + "\r\nerror: " + error);
+        error: function(xhr, status, error){
+            MostraErro(xhr, status, error);
         }
     });
+}
+
+function MostraErro(xhr, status, error) {
+    alert("XHR: " + xhr + "\r\nstatus: " + status + "\r\nerror: " + error);
+}
+
+function ValidaLogin(data) {
+    var retorno = JSON.parse(data);
+    if (retorno.logado) {
+        /*
+        * Verificar como colocar os dados na sessão do usuário        
+        */
+        alert("Logado com sucesso");
+        window.location.replace("./Principal.asp");
+    } else {
+        alert("erro no login");
+    }
 }
 
 function verificarURL() {
@@ -72,6 +83,7 @@ function verificarURL() {
         mostraAlerta("Preencha os campos corretamente!!!");
     };
 }
+
 function mostraAlerta(mensagem) {
     var $alerta = document.getElementById("divAlerta");
     $alerta.innerHTML = mensagem;
