@@ -23,19 +23,17 @@ function BuscarUsuarios(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
     /*
     * Lógica para preenchimento dos dados iniciais da tabela de usuários    
     */
-   data = {
-       "fnTarget": fnTarget,
-       "RegistrosPorPagina": RegistrosPorPagina,
-       "PaginaPesquisa": PaginaPesquisa,
+    data = {
+        "fnTarget": fnTarget,
+        "RegistrosPorPagina": RegistrosPorPagina,
+        "PaginaPesquisa": PaginaPesquisa,
     }
     return $.ajax({
         url: "../Servidor/Controllers/user.asp",
         type: 'POST',
         data: data,
         success: function (data) {
-            debugger;
-            registros = JSON.parse(data);
-            //PreencheTabela(registros.Registros);
+            PreencheTabela(data.Registros);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -48,55 +46,55 @@ function generateTableHead(table, data) {
     let thead = table.createTHead();
     let row = thead.insertRow();
     for (let key of data) {
-      let th = document.createElement("th");
-      let text = document.createTextNode(key);
-      th.appendChild(text);
-      row.appendChild(th);
+        let th = document.createElement("th");
+        let text = document.createTextNode(key);
+        th.appendChild(text);
+        row.appendChild(th);
     }
-  }
-  function generateTable(table, data) {
+}
+function generateTable(table, data) {
     for (let element of data) {
-      let row = table.insertRow();
-      for (key in element) {
-        let cell = row.insertCell();
-        let text = document.createTextNode(element[key]);
-        cell.appendChild(text);
-      }
+        let row = table.insertRow();
+        for (key in element) {
+            let cell = row.insertCell();
+            let text = document.createTextNode(element[key]);
+            cell.appendChild(text);
+        }
     }
-  }
-  
+}
+
 function PreencheTabela(registros) {
 
     var tblUsuarios = document.getElementById("tblUsuarios");
     let data = Object.keys(registros[0]);
     generateTableHead(tblUsuarios, data);
     generateTable(tblUsuarios, registros);
-    generateFooter(tblUsuarios,dados);
+    generateFooter(tblUsuarios, registros);
 }
 
-function generateFooter (tabela,dados) {
-//  <tfoot>
-// <tr>
-//   <th colspan=100%>
-//     <div class="pagination">
-//       <ul>
-//         <a href="#">
-//           <li>
-//             <<</li> </a> <a href="#">
-//           <li>
-//             <</li> </a> <input type="text" name="" id="">
-//               <a href="#">
-//           <li>></li>
-//         </a>
-//         <a href="#">
-//           <li>>></li>
-//         </a>
-//         <li>Mostrando 2 de 2 registros</li>
-//       </ul>
-//     </div>
-//   </th>
-// </tr>
-// </tfoot>
+function generateFooter(tabela, dados) {
+    //  <tfoot>
+    // <tr>
+    //   <th colspan=100%>
+    //     <div class="pagination">
+    //       <ul>
+    //         <a href="#">
+    //           <li>
+    //             <<</li> </a> <a href="#">
+    //           <li>
+    //             <</li> </a> <input type="text" name="" id="">
+    //               <a href="#">
+    //           <li>></li>
+    //         </a>
+    //         <a href="#">
+    //           <li>>></li>
+    //         </a>
+    //         <li>Mostrando 2 de 2 registros</li>
+    //       </ul>
+    //     </div>
+    //   </th>
+    // </tr>
+    // </tfoot>
 }
 
 

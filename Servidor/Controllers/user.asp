@@ -47,20 +47,20 @@
       rs.AbsolutePage = PaginaPesquisa
       Response.ContentType = "application/json"
       Response.Write "{"
-      Response.Write """TotalRegistros"":" & numeroTotalRegistros & ","
-      Response.Write """RegistrosPorPagina"":" & RegistrosPorPagina & ","
-      Response.Write """PaginaAtual"":" & PaginaPesquisa & ","
-      Response.Write """TotalPaginas"":" & numeroTotalPaginas & ","
+      Response.Write """TotalRegistros"":""" & numeroTotalRegistros & ""","
+      Response.Write """RegistrosPorPagina"":""" & RegistrosPorPagina & ""","
+      Response.Write """PaginaAtual"":""" & PaginaPesquisa & ""","
+      Response.Write """TotalPaginas"":""" & numeroTotalPaginas & ""","
       Response.Write """Registros"": ["
       Do While Not (rs.Eof OR rs.AbsolutePage <> PaginaPesquisa)
         Response.Write "{"
-        Response.Write """UsuId"": " & rs("usuid") & ","
-        Response.Write """Nome"": " & rs("nome") & ","
-        Response.Write """Endereco"": " & rs("endereco")& ","
-        Response.Write """Cidade"": " & rs("cidade")& ","
-        Response.Write """Cep"": " & rs("cep")
+        Response.Write """UsuId"": """ & rs("usuid") & ""","
+        Response.Write """Nome"": """ & rs("nome") & ""","
+        Response.Write """Endereco"": """ & rs("endereco") & ""","
+        Response.Write """Cidade"": """ & rs("cidade") & ""","
+        Response.Write """Cep"": """ & rs("cep") & """"
         Response.Write "}"
-        if rs.AbsolutePosition < RegistrosPorPagina then
+        if rs.AbsolutePosition < numeroTotalRegistros then
           Response.Write ","
         end if
         rs.MoveNext
