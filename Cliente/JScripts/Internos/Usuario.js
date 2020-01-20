@@ -55,33 +55,23 @@ function generateTableHead(table, data) {
 function generateTable(table, data) {
     debugger;
     /*
-    * Precisa ainda acertar o , para editar o usuario
+    * Precisa ainda acertar a ação do lapis para editar o usuario
     */
-    // registros = JSON.parse(data);
-    // var dataSet = [];
-    // registros.Registros.forEach(registro => {
-    //     var data = [];
-    //     var acoes = '<td>' +
-    //         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-warning link-editar">Editar</a>' +
-    //         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-danger">Excluir</a>' +
-    //         '</td>'
-    //     data.push(registro.Usuario);
-    //     data.push(registro.Senha);
-    //     data.push(registro.Nome);
-    //     data.push(registro.Endereco);
-    //     data.push(registro.Cidade);
-    //     data.push(registro.Cep);
-    //     data.push(registro.Estado);
-    //     data.push(acoes);
-    //     dataSet.push(data);
-    // });
+    //registros = JSON.parse(data);
+    var tbody = table.createTBody();
     for (var element of data) {
-        var row = table.insertRow();
+        var row = tbody.insertRow();
         for (key in element) {
+            if (key == 'usuid') {               
+                var a = document.createElement("href");
+                a.setAttribute('class', 'btn btn-outline-warning link-editar');
+                a.setAttribute('href', 'usuario.asp?usuID=' + data.UsuId + '');                
+            }
             var cell = row.insertCell();
             var text = document.createTextNode(element[key]);
             cell.appendChild(text);
         }
+
     }
 }
 
