@@ -17,7 +17,7 @@
     </div>
   </main>
    <!--#include file="Includes\JScripts.inc"--> 
-   <script src="JScripts/Internos/usuarioTabela.js" type="text/javascript"></script>
+   <script src="JScripts/Internos/Usuario.js" type="text/javascript"></script>
 </body>
 
 </html>

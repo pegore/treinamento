@@ -22,7 +22,7 @@
     
     palavraParaPesquisa = Request("palavraParaPesquisa")
     id =  Request("usuID")
-    
+
     Execute(Request("fnTarget"))
 
   End if
@@ -54,11 +54,11 @@
       Response.Write """Registros"": ["
       Do While Not (rs.Eof OR rs.AbsolutePage <> PaginaPesquisa)
         Response.Write "{"
-        Response.Write """UsuId"": """ & rs("usuid") & ""","
         Response.Write """Nome"": """ & rs("nome") & ""","
         Response.Write """Endereco"": """ & rs("endereco") & ""","
         Response.Write """Cidade"": """ & rs("cidade") & ""","
-        Response.Write """Cep"": """ & rs("cep") & """"
+        Response.Write """Cep"": """ & rs("cep") & ""","
+        Response.Write """UsuId"": """ & rs("usuid") & """"
         Response.Write "}"
         if rs.AbsolutePosition < numeroTotalRegistros then
           Response.Write ","
@@ -110,40 +110,30 @@
     Response.Write json.Emit()    
   End function
     
+Function CadastrarUsuario() 
+  set ObjUsuario = new cUsuario
+  ObjUsuario.setUsuario(Request("usuario"))
+  ObjUsuario.setSenha(Request("senha"))
+  ObjUsuario.setNome(Request("nome"))
+  ObjUsuario.setEndereco(Request("endereco"))
+  ObjUsuario.setCidade(Request("cidade"))
+  ObjUsuario.setCep(Request("cep"))
+  ObjUsuario.setIdEstado(Request("estado")) 
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)  
+  if retorno<>"" then
+    msg = "Registro não gravado"
+    Response.Write "Erro: "&sql
+  end if
+  cn.close
+  msg = "Registro gravado com sucesso"
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  Response.Write """Mensagem"":""" & msg & """"
+  Response.Write "}"
+End function
 
-' Function LimparCampos()
-'   usuario=""
-'   senha=""
-'   nome=""
-'   endereco=""
-'   cidade=""
-'   cep=""
-'   estado=""
-'   acao="Inserir"  
-' End Function
-
-' Function InserirNovoUsuario()
-' stop
-'   sql="INSERT INTO [dbo].[usuario] (usuario,senha,nome,endereco,cidade,cep,estadoid) VALUES ("
-'   sql=sql & "'" & Request.Form("txtUsuario") & "',"
-'   sql=sql & "'" & Request.Form("pwdSenha") & "',"
-'   sql=sql & "'" & Request.Form("txtNome") & "',"
-'   sql=sql & "'" & Request.Form("txtEndereco") & "',"
-'   sql=sql & "'" & Request.Form("txtCidade") & "',"
-'   sql=sql & "'" & Request.Form("txtCep") & "',"
-'   sql=sql & "'" & Request.Form("selEstados") & "')"
-'   on error resume next
-'   cn.Execute sql, recaffected
-'   if err<>0 then
-'     msg = "Registro não gravado"
-'     Response.Write "Erro: "&sql
-'     Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-'   end if
-'   cn.close
-'   msg = "Registro gravado com sucesso"
-'   acao="Novo"
-'   Response.Redirect("usuarioCadastro.asp?acao="&acao&"&recaffected="&recaffected&"&msg="&msg)
-' End function
 
 ' '
 ' ' Função para atualizar um usuário no banco de dados
@@ -189,4 +179,17 @@
 '   msg = "Registro excluido com sucesso"
 '   Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
 ' End Function
+
+
+' Function LimparCampos()
+'   usuario=""
+'   senha=""
+'   nome=""
+'   endereco=""
+'   cidade=""
+'   cep=""
+'   estado=""
+'   acao="Inserir"  
+' End Function
+
 %>

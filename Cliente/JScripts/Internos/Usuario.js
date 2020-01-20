@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    //AdicionarEventos();
+    AdicionarEventos();
     BuscarUsuarios("BuscarUsuariosPaginados", 20, 1);
 });
 
@@ -15,7 +15,7 @@ function AdicionarEventos() {
     */
     $body = document.getElementsByTagName("BODY")[0];
     $body.addEventListener("load", function () {
-        BuscarUsuarios("BuscarUsuariosPaginados", 10, 1);
+        BuscarUsuarios("BuscarUsuariosPaginados", 20, 1);
     });
 }
 
@@ -33,7 +33,7 @@ function BuscarUsuarios(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
         type: 'POST',
         data: data,
         success: function (data) {
-            PreencheTabela(data.Registros);
+            PreencheTabela(data);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -43,33 +43,62 @@ function BuscarUsuarios(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
 
 
 function generateTableHead(table, data) {
-    let thead = table.createTHead();
-    let row = thead.insertRow();
-    for (let key of data) {
-        let th = document.createElement("th");
-        let text = document.createTextNode(key);
+    var thead = table.createTHead();
+    var row = thead.insertRow();
+    for (var key of data) {
+        var th = document.createElement("th");
+        var text = document.createTextNode(key);
         th.appendChild(text);
         row.appendChild(th);
     }
 }
 function generateTable(table, data) {
-    for (let element of data) {
-        let row = table.insertRow();
+    debugger;
+    /*
+    * Precisa ainda acertar o , para editar o usuario
+    */
+    // registros = JSON.parse(data);
+    // var dataSet = [];
+    // registros.Registros.forEach(registro => {
+    //     var data = [];
+    //     var acoes = '<td>' +
+    //         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-warning link-editar">Editar</a>' +
+    //         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-danger">Excluir</a>' +
+    //         '</td>'
+    //     data.push(registro.Usuario);
+    //     data.push(registro.Senha);
+    //     data.push(registro.Nome);
+    //     data.push(registro.Endereco);
+    //     data.push(registro.Cidade);
+    //     data.push(registro.Cep);
+    //     data.push(registro.Estado);
+    //     data.push(acoes);
+    //     dataSet.push(data);
+    // });
+    for (var element of data) {
+        var row = table.insertRow();
         for (key in element) {
-            let cell = row.insertCell();
-            let text = document.createTextNode(element[key]);
+            var cell = row.insertCell();
+            var text = document.createTextNode(element[key]);
             cell.appendChild(text);
         }
     }
 }
 
-function PreencheTabela(registros) {
-
+function PreencheTabela(registros2) {
+    var registros = registros2.Registros;
     var tblUsuarios = document.getElementById("tblUsuarios");
-    let data = Object.keys(registros[0]);
+    var data = Object.keys(registros[0]);
+    var dadosRodape = {
+        "TotalRegistros": registros2.TotalRegistros,
+        "RegistrosPorPagina": registros2.RegistrosPorPagina,
+        "PaginaAtual": registros2.PaginaAtual,
+        "TotalPaginas": registros2.TotalPaginas,
+    }
     generateTableHead(tblUsuarios, data);
     generateTable(tblUsuarios, registros);
-    generateFooter(tblUsuarios, registros);
+    generateFooter(tblUsuarios, dadosRodape);
+
 }
 
 function generateFooter(tabela, dados) {
@@ -98,26 +127,6 @@ function generateFooter(tabela, dados) {
 }
 
 
-// debugger;
-// registros = JSON.parse(data);
-// var dataSet = [];
-// registros.Registros.forEach(registro => {
-//     var data = [];
-//     var acoes = '<td>' +
-//         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-warning link-editar">Editar</a>' +
-//         '<a href="usuario.asp?usuID=' + registro.UsuId + '" class="btn btn-outline-danger">Excluir</a>' +
-//         '</td>'
-//     data.push(registro.Usuario);
-//     data.push(registro.Senha);
-//     data.push(registro.Nome);
-//     data.push(registro.Endereco);
-//     data.push(registro.Cidade);
-//     data.push(registro.Cep);
-//     data.push(registro.Estado);
-//     data.push(acoes);
-//     dataSet.push(data);
-// });
-// debugger;
 
 
 
@@ -173,7 +182,7 @@ function buscaDados(idUser) {
 
 /**
  * 
- * Preenche os options do elect de estados com os valores recebidos do banco
+ * Preenche os options do select de estados com os valores recebidos do banco
  * 
  * @param {HTMLForm} idElemento 
  * @param {Array} data 

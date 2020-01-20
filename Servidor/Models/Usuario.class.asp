@@ -85,11 +85,27 @@ Class cUsuario
     '
 	
     'Inserção de usuários
-    public function InsercaoUsuario()
+    public function InsercaoUsuario(cn,ObjUsuario)
         '
         ' TODO Lógica de inserção de usuários novos
         '
-		set InsercaoUsuario = rs
+        stop
+        sql="INSERT INTO [dbo].[usuario] (usuario,senha,nome,endereco,cidade,cep,estadoid) VALUES ("
+        sql=sql & "'" & ObjUsuario.getUsuario() & "',"
+        sql=sql & "'" & ObjUsuario.getSenha() & "',"
+        sql=sql & "'" & ObjUsuario.getNome() & "',"
+        sql=sql & "'" & ObjUsuario.getEndereco() & "',"
+        sql=sql & "'" & ObjUsuario.getCidade() & "',"
+        sql=sql & "'" & ObjUsuario.getCep() & "',"
+        sql=sql & "'" & ObjUsuario.getIdEstado() & "');"
+        on error resume next
+        cn.Execute(sql)
+        Set rs=Server.CreateObject("ADODB.recordset")
+        rs.Open "select @@identity as 'usuid'", cn, &H0001
+        set InsercaoUsuario = rs("usuid")
+        'if err=0 then
+         '   set InsercaoUsuario = "Registro gravado com sucesso"
+        'end if        
 	end function
 
     'Update de usuários
@@ -107,7 +123,7 @@ Class cUsuario
         '
         ' definir o SQL para pesquisa de acordo com a entrada
         ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
-        sql = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] FROM [treinamento].[dbo].[usuario]"
+        sql = "SELECT [nome],[usuario],[endereco],[cidade],[cep],[usuid] FROM [treinamento].[dbo].[usuario]"
         sqlPesquisa = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] "
         sqlPesquisa = sqlPesquisa & "FROM [treinamento].[dbo].[usuario] WHERE [usuario] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
