@@ -14,11 +14,10 @@ function AdicionarEventos() {
     $selEstados = document.getElementById("selEstados");
     $btnCadastrar = document.getElementById("btnCadastrar");
     $btnAlterar = document.getElementById("btnAlterar");
-    $btnNovo = document.getElementById("btnNovo");
-    $selEstados.addEventListener("focusin", function () {
+    $btnNovo = document.getElementById("btnNovo");    
+    $selEstados.addEventListener("focus", function () {
         BuscarEstados($selEstados);
     });
-
     $btnCadastrar.addEventListener("click", function (e) {
         CadastrarUsuario(e);
     });

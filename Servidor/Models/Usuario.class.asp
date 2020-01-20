@@ -97,12 +97,13 @@ Class cUsuario
         sql=sql & "'" & ObjUsuario.getEndereco() & "',"
         sql=sql & "'" & ObjUsuario.getCidade() & "',"
         sql=sql & "'" & ObjUsuario.getCep() & "',"
-        sql=sql & "'" & ObjUsuario.getIdEstado() & "');"
+        sql=sql & "'" & ObjUsuario.getIdEstado() & "');SELECT SCOPE_IDENTITY() As usuid"
         on error resume next
-        cn.Execute(sql)
-        Set rs=Server.CreateObject("ADODB.recordset")
-        rs.Open "select @@identity as 'usuid'", cn, &H0001
-        set InsercaoUsuario = rs("usuid")
+        'Set rs=Server.CreateObject("ADODB.recordset")
+        set rs = cn.Execute(sql)
+        'rs.Open "select @@identity as 'usuid';", cn
+         usid = rs("usuid")
+        set InsercaoUsuario =0
         'if err=0 then
          '   set InsercaoUsuario = "Registro gravado com sucesso"
         'end if        
