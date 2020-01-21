@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     AdicionarEventos();
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var usuid = urlParams.get('UsuId');
+    PreencherDadosUsuario(usuid);
+
 });
 
 function AdicionarEventos() {
@@ -14,8 +19,9 @@ function AdicionarEventos() {
     $selEstados = document.getElementById("selEstados");
     $btnCadastrar = document.getElementById("btnCadastrar");
     $btnAlterar = document.getElementById("btnAlterar");
-    $btnNovo = document.getElementById("btnNovo");    
-    $selEstados.addEventListener("focus", function () {
+    $btnNovo = document.getElementById("btnNovo");
+
+    $selEstados.addEventListener("click", function () {
         BuscarEstados($selEstados);
     });
     $btnCadastrar.addEventListener("click", function (e) {
@@ -57,6 +63,7 @@ function BuscarEstados(idElemento) {
         }
     });
 }
+
 function CapturaCamposFormulario(formularioHtml) {
     var n = 0;
     var objRetorno = {};
@@ -102,24 +109,25 @@ function CadastrarUsuario(e) {
  * 
  * @param {number} idUser 
  */
-function buscaDados(idUser) {
+function PreencherDadosUsuario(idUser) {
     if (!idUser) {
         return false;
     }
-    var formularioHtml = document.getElementById('frmUser');
+    var formularioHtml = document.getElementById("frmUser");
     // TODO - Melhorar a forma de construção da url 
     return $.ajax({
-        url: "./AspPages/user.asp?usuid=" + idUser + "&acao=Editar",
-        data: "",
+        url: "../Servidor/Controllers/user.asp",
+        data: {
+            fnTarget: "BuscarUsuarioPorId",
+            usuId:idUser
+        },
         type: 'GET',
         contentType: 'application/json',
         success: function (data) {
-            setFormCampos(formularioHtml, JSON.parse(data));
+            setFormCampos(formularioHtml, data);
         }
     });
 }
-
-
 /**
  *
  * Preenche um formulário com o objeto JSON, e retorna o próprio formulário
@@ -132,8 +140,9 @@ function buscaDados(idUser) {
 function setFormCampos(formularioHtml, prJSON) {
     var n = 0;
     while (formularioHtml[n]) {
+        debugger;
         var txtNome = formularioHtml[n].name;
-        formularioHtml[n].value = prJSON[txtNome] || '';
+        formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
         n++;
     }
     return formularioHtml;

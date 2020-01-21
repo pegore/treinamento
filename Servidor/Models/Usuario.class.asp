@@ -143,6 +143,16 @@ Class cUsuario
         rs.Open sql, cn, &H0001
         set BuscarUsuarioPorNomeSenha = rs
     end function
+    
+    '
+    'Buscar um usuário para efetuar o login
+    '
+    public function BuscarUsuarioPorId(cn,usuId)  
+        sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuId='" & usuId & "'" 
+        Set rs=Server.CreateObject("ADODB.recordset")
+        rs.Open sql, cn, &H0001
+        set BuscarUsuarioPorId = rs
+    end function
 End Class
 
 

@@ -7,7 +7,7 @@
 
 <body>
 <!--#include file="./Includes/TopMenu.inc"-->
-    <form class="column spacing"  name="frmUser" action="usuarioCadastro.asp" method="post">
+    <form class="column spacing"  name="frmUser" id="frmUser">
       <div class="row form-group items-center">
         <label class="col-2" for="txtUsuario">Usuário:</label>
         <input class="col-4 textfield" type="text" id="txtUsuario" name="txtUsuario"placeholder="Usuário">      

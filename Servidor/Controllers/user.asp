@@ -135,6 +135,25 @@ Function CadastrarUsuario()
 End function
 
 
+Function BuscarUsuarioPorId() 
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  set ObjUsuario = new cUsuario
+  set rs = objUsuario.BuscarUsuarioPorId(cn, id)
+  If Not rs.Eof Then     
+    Response.ContentType = "application/json"
+    Response.Write "{"
+    Response.Write """Usuario"": """ & rs("usuario") & ""","
+    Response.Write """Senha"": """ & rs("senha") & ""","
+    Response.Write """Nome"": """ & rs("nome") & ""","
+    Response.Write """Endereco"": """ & rs("endereco") & ""","
+    Response.Write """Cidade"": """ & rs("cidade") & ""","
+    Response.Write """Cep"": """ & rs("cep") & ""","
+    Response.Write """Estado"": """ & rs("estadoId") & """"
+    Response.Write "}"        
+  End If
+End function
+
 ' '
 ' ' Função para atualizar um usuário no banco de dados
 ' '
@@ -180,16 +199,5 @@ End function
 '   Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
 ' End Function
 
-
-' Function LimparCampos()
-'   usuario=""
-'   senha=""
-'   nome=""
-'   endereco=""
-'   cidade=""
-'   cep=""
-'   estado=""
-'   acao="Inserir"  
-' End Function
 
 %>
