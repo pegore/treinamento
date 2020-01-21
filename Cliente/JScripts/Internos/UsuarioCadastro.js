@@ -25,11 +25,12 @@ function AdicionarEventos() {
         BuscarEstados($selEstados);
     });
     $btnCadastrar.addEventListener("click", function (e) {
+        debugger;
         CadastrarUsuario(e);
     });
 
-    $btnAlterar.addEventListener("click", function () {
-        //EditarUsuario(e);
+    $btnAlterar.addEventListener("click", function (e) {
+        EditarUsuario(e);
     });
 
     $btnNovo.addEventListener("click", function () {
@@ -103,6 +104,34 @@ function CadastrarUsuario(e) {
     });
 }
 
+function EditarUsuario(e) {
+    /*
+    * Lógica para cadastrar um usuario
+    */
+   debugger
+    var usuario = CapturaCamposFormulario(e.currentTarget.form);
+    data = {
+        fnTarget: "EditarUsuario",
+        usuario: usuario.txtUsuario,
+        senha: usuario.pwdSenha,
+        nome: usuario.txtNome,
+        endereco: usuario.txtEndereco,
+        cidade: usuario.txtCidade,
+        cep: usuario.txtCep,
+        estado: usuario.selEstados
+    }
+    return $.ajax({
+        url: "../Servidor/Controllers/user.asp",
+        type: 'POST',
+        data: data,
+        success: function (data) {
+            setFormCampos(formularioHtml, data);
+        },
+        error: function (xhr, status, error) {
+            alert("Erro: " + xhr + status + error);
+        }
+    });
+}
 
 /**
  * Retorna os dados de um usuario pelo Id e preenche o formulário
@@ -140,7 +169,6 @@ function PreencherDadosUsuario(idUser) {
 function setFormCampos(formularioHtml, prJSON) {
     var n = 0;
     while (formularioHtml[n]) {
-        debugger;
         var txtNome = formularioHtml[n].name;
         formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
         n++;

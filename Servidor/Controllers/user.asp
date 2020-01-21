@@ -154,30 +154,30 @@ Function BuscarUsuarioPorId()
   End If
 End function
 
-' '
-' ' Função para atualizar um usuário no banco de dados
-' '
-' Function EditarUsuario(id)
-' stop
-'   sql="UPDATE [dbo].[usuario] SET "
-'   sql=sql & "[usuario] = '" & Request.Form("txtUsuario") & "',"
-'   sql=sql & "[senha] = '" & Request.Form("pwdSenha") & "',"
-'   sql=sql & "[nome] = '" & Request.Form("txtNome") & "',"
-'   sql=sql & "[endereco] = '" & Request.Form("txtEndereco") & "',"
-'   sql=sql & "[cidade] = '" & Request.Form("txtCidade") & "',"
-'   sql=sql & "[cep] = '" & Request.Form("txtCep") & "',"
-'   sql=sql & "[estadoid] = '" & Request.Form("selEstados") & "'"
-'   sql=sql & "WHERE usuid="& id
-'   on error resume next
-'   cn.Execute sql, recaffected
-'   if err<>0 then
-'     msg = "Registro não Atualizado"
-'     Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-'   end if
-'   cn.close
-'   msg = "Registro atualizado com sucesso"
-'   Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-' End Function
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function EditarUsuario(id)
+stop
+  sql="UPDATE [dbo].[usuario] SET "
+  sql=sql & "[usuario] = '" & Request.Form("txtUsuario") & "',"
+  sql=sql & "[senha] = '" & Request.Form("pwdSenha") & "',"
+  sql=sql & "[nome] = '" & Request.Form("txtNome") & "',"
+  sql=sql & "[endereco] = '" & Request.Form("txtEndereco") & "',"
+  sql=sql & "[cidade] = '" & Request.Form("txtCidade") & "',"
+  sql=sql & "[cep] = '" & Request.Form("txtCep") & "',"
+  sql=sql & "[estadoid] = '" & Request.Form("selEstados") & "'"
+  sql=sql & "WHERE usuid="& id
+  on error resume next
+  cn.Execute sql, recaffected
+  if err<>0 then
+    msg = "Registro não Atualizado"
+    Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
+  end if
+  cn.close
+  msg = "Registro atualizado com sucesso"
+  Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
+End Function
 
 ' '
 ' 'Função para exclusão de usuário

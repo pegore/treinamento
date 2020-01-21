@@ -32,9 +32,9 @@
         </select>
       </div>
       <div class="row">
-        <button type="submit" id="btnCadastrar"class="button button-primary col-4">Cadastrar</button>
-        <button type="submit" id="btnAlterar"class="button button-warning col-4">Alterar</button>
-        <button type="submit" id="btnNovo"class="button button-secondary col-4">Novo</button>
+        <button type="button" id="btnCadastrar"class="button button-primary col-4">Cadastrar</button>
+        <button type="button" id="btnAlterar"class="button button-warning col-4">Alterar</button>
+        <button type="button" id="btnNovo"class="button button-secondary col-4">Novo</button>
       </div>
     </form>
   </main>
