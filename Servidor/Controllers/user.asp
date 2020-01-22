@@ -134,15 +134,13 @@ Function BuscarUsuarioPorId()
   ObjConexao.FecharConexao(cn)
 End function
 
-
-
 '
 ' Função para atualizar um usuário no banco de dados
 '
 Function EditarUsuario()
   stop  
   set ObjUsuario = new cUsuario
-  ObjUsuario.setId((Request("usuId"))
+  ObjUsuario.setId(id)
   ObjUsuario.setUsuario(Request("usuario"))
   ObjUsuario.setSenha(Request("senha"))
   ObjUsuario.setNome(Request("nome"))
@@ -152,11 +150,11 @@ Function EditarUsuario()
   ObjUsuario.setIdEstado(Request("estado")) 
   set ObjConexao = new Conexao
   set cn = ObjConexao.AbreConexao()
-  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)
+  retorno = objUsuario.UpdateUsuario(cn, ObjUsuario)
   stop
   Response.ContentType = "application/json"
   Response.Write "{"
-  If VarType(retorno)=8 then 
+  If VarType(retorno)=8 then ' Se for String - Não é a melhor forma mas foi o que consegui fazer
       Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
   Else
     Response.Write """UsuId"":""" & retorno & """"

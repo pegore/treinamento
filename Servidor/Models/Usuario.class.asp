@@ -86,9 +86,6 @@ Class cUsuario
 	
     'Inserção de usuários
     public function InsercaoUsuario(cn,ObjUsuario)
-        '
-        ' TODO Lógica de inserção de usuários novos
-        '
         sql="INSERT INTO [dbo].[usuario] (usuario,senha,nome,endereco,cidade,cep,estadoid) VALUES ("
         sql=sql & "'" & ObjUsuario.getUsuario() & "',"
         sql=sql & "'" & ObjUsuario.getSenha() & "',"
@@ -99,7 +96,6 @@ Class cUsuario
         sql=sql & "'" & ObjUsuario.getIdEstado() & "');"
         on error resume next
         cn.Execute(sql)
-        stop
         if err<>0 then
             InsercaoUsuario =  err.Description
         else    
@@ -111,7 +107,7 @@ Class cUsuario
 	end function
 
     'Update de usuários
-    public function UpadateUsuario(cn,ObjUsuario)
+    public function UpdateUsuario(cn,ObjUsuario)
         stop
         sql="UPDATE [dbo].[usuario] SET "
         sql=sql & "'" & ObjUsuario.getUsuario() & "',"
@@ -120,17 +116,17 @@ Class cUsuario
         sql=sql & "'" & ObjUsuario.getEndereco() & "',"
         sql=sql & "'" & ObjUsuario.getCidade() & "',"
         sql=sql & "'" & ObjUsuario.getCep() & "',"
-        sql=sql & "'" & ObjUsuario.getIdEstado() & "';"
-        sql=sql & "WHERE usuid=" & ObjUsuario.usuId
+        sql=sql & "'" & ObjUsuario.getIdEstado() & "'"
+        sql=sql & "WHERE usuid=" & ObjUsuario.getId() & "';"
         on error resume next
         cn.Execute(sql)
         stop
         if err<>0 then
-            InsercaoUsuario =  err.Description
+            UpdateUsuario =  err.Description
         else    
             Set rs=Server.CreateObject("ADODB.recordset")
             rs.Open "SELECT SCOPE_IDENTITY() As usuid;", cn
-            InsercaoUsuario = rs("usuid").value
+            UpdateUsuario = rs("usuid").value
             rs.close()
         end if
 	end function
