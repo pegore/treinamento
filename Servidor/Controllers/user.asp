@@ -1,6 +1,8 @@
 <!--#include file="../Models/Conexao.class.asp"-->
 <!--#include file="../Models/Usuario.class.asp"-->
 <%
+' // TODO - Criar uma função de retorno de mensagens
+'         - Criar uma função de retorno de erros
   Response.CodePage = 65001
   Response.CharSet = "UTF-8"
   '
@@ -28,7 +30,7 @@
   End if
 
   '
-  ' Função para buscar os usuários em modo de paginação
+  ' Função para buscar os usuários em modo de paginação respnse write
   '
   Function BuscarUsuariosPaginados()
     Dim numeroTotalRegistros
@@ -70,7 +72,124 @@
     Response.Write "}"
   End Function
 
-  Function BuscarUsuariosPaginadosJson()
+  
+
+'
+' Cadastra um usuário no banco
+'    
+Function CadastrarUsuario() 
+  ' // TODO - Criar Função de validação dos dados;
+  '         - Função deve receber o objeto usuário;
+  '         - Função deve receber o objeto conexão;
+  '         - Melhorar o tratamento de erros;
+  '         - Melhorar mensagens de retorno;
+  set ObjUsuario = new cUsuario
+  ObjUsuario.setUsuario(Request("usuario"))
+  ObjUsuario.setSenha(Request("senha"))
+  ObjUsuario.setNome(Request("nome"))
+  ObjUsuario.setEndereco(Request("endereco"))
+  ObjUsuario.setCidade(Request("cidade"))
+  ObjUsuario.setCep(Request("cep"))
+  ObjUsuario.setIdEstado(Request("estado")) 
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)
+  stop
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then 
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """UsuId"":""" & retorno & """"
+  end if
+  ObjConexao.FecharConexao(cn)
+  Response.Write "}"
+End function
+
+'
+' Retorna um usuário do Banco de dados para o cliente response write
+'
+Function BuscarUsuarioPorId() 
+  ' // TODO - Função deve receber o objeto conexão
+  '         - Função deve receber um objeto usuário preenchido com o id
+  '         - Fazer tratamento de erros;
+  '         - Melhorar mensagens de retorno;
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  set ObjUsuario = new cUsuario
+  set rs = objUsuario.BuscarUsuarioPorId(cn, id)
+  If Not rs.Eof Then     
+    Response.ContentType = "application/json"
+    Response.Write "{"
+    Response.Write """Usuario"": """ & rs("usuario") & ""","
+    Response.Write """Senha"": """ & rs("senha") & ""","
+    Response.Write """Nome"": """ & rs("nome") & ""","
+    Response.Write """Endereco"": """ & rs("endereco") & ""","
+    Response.Write """Cidade"": """ & rs("cidade") & ""","
+    Response.Write """Cep"": """ & rs("cep") & ""","
+    Response.Write """Estado"": """ & rs("estadoId") & """"
+    Response.Write "}"        
+  End If
+  rs.Close()
+  ObjConexao.FecharConexao(cn)
+End function
+
+
+
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function EditarUsuario()
+  stop  
+  set ObjUsuario = new cUsuario
+  ObjUsuario.setId((Request("usuId"))
+  ObjUsuario.setUsuario(Request("usuario"))
+  ObjUsuario.setSenha(Request("senha"))
+  ObjUsuario.setNome(Request("nome"))
+  ObjUsuario.setEndereco(Request("endereco"))
+  ObjUsuario.setCidade(Request("cidade"))
+  ObjUsuario.setCep(Request("cep"))
+  ObjUsuario.setIdEstado(Request("estado")) 
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)
+  stop
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then 
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """UsuId"":""" & retorno & """"
+  end if
+  ObjConexao.FecharConexao(cn)
+  Response.Write "}" 
+End Function
+
+' '
+' 'Função para exclusão de usuário
+' '
+' Function ExcluirUsuario(id)
+'   '
+'   ' TODO - Validar se o usuário não possui tarefas antes da exclusão
+'   '
+'  stop
+'   sql="DELETE FROM [dbo].[usuario] WHERE customerID='" & id & "'"
+'   on error resume next
+'   cn.Execute sql, recaffected
+'   if err<>0 then
+'     msg = "Registro não Excluido"
+'     Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
+'   end if
+'   cn.close
+'   msg = "Registro excluido com sucesso"
+'   Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
+' End Function
+
+
+  '
+  ' Função para buscar os usuários em modo de paginação Chilkat
+  '
+  Function CKBuscarUsuariosPaginados()
     Dim numeroTotalRegistros
     Dim numeroTotalPaginas
     set ObjConexao = new Conexao
@@ -109,95 +228,32 @@
     json.EmitCompact = 0
     Response.Write json.Emit()    
   End function
-    
-Function CadastrarUsuario() 
-  set ObjUsuario = new cUsuario
-  ObjUsuario.setUsuario(Request("usuario"))
-  ObjUsuario.setSenha(Request("senha"))
-  ObjUsuario.setNome(Request("nome"))
-  ObjUsuario.setEndereco(Request("endereco"))
-  ObjUsuario.setCidade(Request("cidade"))
-  ObjUsuario.setCep(Request("cep"))
-  ObjUsuario.setIdEstado(Request("estado")) 
-  set ObjConexao = new Conexao
-  set cn = ObjConexao.AbreConexao()
-  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)  
-  if retorno<>"" then
-    msg = "Registro não gravado"
-    Response.Write "Erro: "&sql
-  end if
-  cn.close
-  msg = "Registro gravado com sucesso"
-  Response.ContentType = "application/json"
-  Response.Write "{"
-  Response.Write """Mensagem"":""" & msg & """"
-  Response.Write "}"
-End function
-
-
-Function BuscarUsuarioPorId() 
+    '
+' Retorna um usuário do Banco de dados para o cliente chilkat
+'
+Function CKBuscarUsuarioPorId() 
+  ' // TODO - Função deve receber o objeto conexão
+  '         - Função deve receber um objeto usuário preenchido com o id
+  '         - Fazer tratamento de erros;
+  '         - Melhorar mensagens de retorno;
   set ObjConexao = new Conexao
   set cn = ObjConexao.AbreConexao()
   set ObjUsuario = new cUsuario
   set rs = objUsuario.BuscarUsuarioPorId(cn, id)
   If Not rs.Eof Then     
-    Response.ContentType = "application/json"
-    Response.Write "{"
-    Response.Write """Usuario"": """ & rs("usuario") & ""","
-    Response.Write """Senha"": """ & rs("senha") & ""","
-    Response.Write """Nome"": """ & rs("nome") & ""","
-    Response.Write """Endereco"": """ & rs("endereco") & ""","
-    Response.Write """Cidade"": """ & rs("cidade") & ""","
-    Response.Write """Cep"": """ & rs("cep") & ""","
-    Response.Write """Estado"": """ & rs("estadoId") & """"
-    Response.Write "}"        
+    Set usuario = Server.CreateObject("Chilkat_9_5_0.JsonObject")
+    success = usuario.AddIntAt(-1,"UsuId",rs("usuid"))
+    success = usuario.AddStringAt(-1,"Usuario",rs("usuario"))
+    success = usuario.AddStringAt(-1,"Senha",rs("senha"))
+    success = usuario.AddStringAt(-1,"Nome",rs("nome"))
+    success = usuario.AddStringAt(-1,"Endereco",rs("endereco"))
+    success = usuario.AddStringAt(-1,"Cidade",rs("cidade"))
+    success = usuario.AddStringAt(-1,"Cep",rs("cep"))   
+    success = usuario.AddIntAt(-1,"Estado",rs("estadoId"))  
   End If
+  rs.Close()
+  ObjConexao.FecharConexao(cn)
+  json.EmitCompact = 0
+  Response.Write json.Emit()    
 End function
-
-'
-' Função para atualizar um usuário no banco de dados
-'
-Function EditarUsuario(id)
-stop
-  sql="UPDATE [dbo].[usuario] SET "
-  sql=sql & "[usuario] = '" & Request.Form("txtUsuario") & "',"
-  sql=sql & "[senha] = '" & Request.Form("pwdSenha") & "',"
-  sql=sql & "[nome] = '" & Request.Form("txtNome") & "',"
-  sql=sql & "[endereco] = '" & Request.Form("txtEndereco") & "',"
-  sql=sql & "[cidade] = '" & Request.Form("txtCidade") & "',"
-  sql=sql & "[cep] = '" & Request.Form("txtCep") & "',"
-  sql=sql & "[estadoid] = '" & Request.Form("selEstados") & "'"
-  sql=sql & "WHERE usuid="& id
-  on error resume next
-  cn.Execute sql, recaffected
-  if err<>0 then
-    msg = "Registro não Atualizado"
-    Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-  end if
-  cn.close
-  msg = "Registro atualizado com sucesso"
-  Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-End Function
-
-' '
-' 'Função para exclusão de usuário
-' '
-' Function ExcluirUsuario(id)
-'   '
-'   ' TODO - Validar se o usuário não possui tarefas antes da exclusão
-'   '
-'  stop
-'   sql="DELETE FROM [dbo].[usuario] WHERE customerID='" & id & "'"
-'   on error resume next
-'   cn.Execute sql, recaffected
-'   if err<>0 then
-'     msg = "Registro não Excluido"
-'     Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-'   end if
-'   cn.close
-'   msg = "Registro excluido com sucesso"
-'   Response.Redirect("usuarioCadastro.asp?recaffected="&recaffected&"&msg="&msg)
-' End Function
-
-
 %>

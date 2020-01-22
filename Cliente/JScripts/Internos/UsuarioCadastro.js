@@ -1,60 +1,75 @@
 document.addEventListener('DOMContentLoaded', function () {
-    AdicionarEventos();
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     var usuid = urlParams.get('UsuId');
+    AdicionarEventos(usuid);
     PreencherDadosUsuario(usuid);
-
+    BuscarEstados($selEstados);
 });
 
-function AdicionarEventos() {
-    /*
-    * Atrelar os eventos da página   
-    * A tabela terá os seguintes eventos:
-    *   - Limpar campos
-    *   - Cadastrar usuário
-    *   - Editar Usuário
-    *   - Carregar o combo de estados    
-    */
+/**
+ * Vincula os eventos da página as ações correspondentes
+ *      - Botão Cadastrar: Cadastrar usuário
+ *      - Botão Editar: Editar Usuário
+ *      - Botão Novo : Limpa o formulário para novo preenchimento
+ *      - Carrega o combo de estados na inicialização da página
+ *      - Carrega os dados de um usuário quando entra na página se o id estiver na url
+ * 
+ * @author Lino Pegoretti
+ * @param {Number} usuid
+ */
+function AdicionarEventos(usuid) {
+    // TODO - Verificar os eventos do select e
     $selEstados = document.getElementById("selEstados");
     $btnCadastrar = document.getElementById("btnCadastrar");
     $btnAlterar = document.getElementById("btnAlterar");
     $btnNovo = document.getElementById("btnNovo");
 
-    $selEstados.addEventListener("click", function () {
-        BuscarEstados($selEstados);
-    });
     $btnCadastrar.addEventListener("click", function (e) {
-        debugger;
         CadastrarUsuario(e);
     });
 
     $btnAlterar.addEventListener("click", function (e) {
-        EditarUsuario(e);
+        EditarUsuario(e, usuid);
     });
 
     $btnNovo.addEventListener("click", function () {
         //NovoUsuario(e);
     });
 
-}
+    $selEstados.addEventListener("load", function () {
+        BuscarEstados($selEstados);
+    });
 
+    document.addEventListener("load", function (e) {
+        PreencherDadosUsuario(usuid);
+    });
+}
 
 /**
  * Busca os estados no banco de dados e preenche o select com esses valores
  * 
- * @param {HTMLSelectElement} idElemento 
+ * @author Lino Pegoretti
+ * @param {HTMLSelectElement} idElemento
+ * @returns {HTMLOptionElement} 
  */
 function BuscarEstados(idElemento) {
     if (!idElemento) {
         return false;
     }
     return $.ajax({
-        url: "../Servidor/Controllers/estado.asp?fnTarget=BuscarEstados",
+        url: "../Servidor/Controllers/estado.asp",
         type: 'GET',
         contentType: 'application/json',
+        data: {
+            fnTarget: "BuscarEstados"
+        },
         success: function (data) {
             var estados = data['Registros'];
+            // var opt = document.createElement('option');
+            // opt.innerHTML = "Selecione Estado";
+            // opt.value = 0;
+            // idElemento.appendChild(opt);
             for (var i = 0; i < estados.length; i++) {
                 var opt = document.createElement('option');
                 opt.innerHTML = estados[i]['Nome'];
@@ -64,22 +79,18 @@ function BuscarEstados(idElemento) {
         }
     });
 }
-
-function CapturaCamposFormulario(formularioHtml) {
-    var n = 0;
-    var objRetorno = {};
-    while (formularioHtml[n]) {
-        var campo = formularioHtml[n];
-        objRetorno[campo.name] = campo.value === "" ? null : campo.value;
-        n++;
-    }
-    return objRetorno;
-}
-function CadastrarUsuario(e) {
+/**
+ * Cadastra um usuário no servidor e retorna o identificador desse cadastro
+ *
+ * @author Lino Pegoretti
+ * @param {Event} event
+ * @returns {Object} 
+ */
+function CadastrarUsuario(event) {
     /*
     * Lógica para cadastrar um usuario
     */
-    var usuario = CapturaCamposFormulario(e.currentTarget.form);
+    var usuario = CapturaCamposFormulario(event.currentTarget.form);
     data = {
         fnTarget: "CadastrarUsuario",
         usuario: usuario.txtUsuario,
@@ -96,7 +107,11 @@ function CadastrarUsuario(e) {
         data: data,
         success: function (data) {
             debugger;
-            PreencheTabela(data);
+            if (data.Erro) {
+                alert("Erro: " + data.Erro);
+            }
+            PreencheCamposFormulario(document.getElementById("frmUser"), {});
+            PreencherDadosUsuario(data.UsuId);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -104,14 +119,20 @@ function CadastrarUsuario(e) {
     });
 }
 
-function EditarUsuario(e) {
-    /*
-    * Lógica para cadastrar um usuario
-    */
-   debugger
-    var usuario = CapturaCamposFormulario(e.currentTarget.form);
+/**
+ * Edita um usuário no servidor e retorna o identificador desse cadastro
+ * 
+ * @author Lino Pegoretti
+ * @param {Event} event 
+ * @returns {object}
+ */
+function EditarUsuario(event, usuid) {
+    // TODO - Fazer a validação dos dados antes de enviar ao servidor
+    debugger
+    var usuario = CapturaCamposFormulario(event.currentTarget.form);
     data = {
         fnTarget: "EditarUsuario",
+        usuid: usuid,
         usuario: usuario.txtUsuario,
         senha: usuario.pwdSenha,
         nome: usuario.txtNome,
@@ -125,7 +146,12 @@ function EditarUsuario(e) {
         type: 'POST',
         data: data,
         success: function (data) {
-            setFormCampos(formularioHtml, data);
+            debugger;
+            if (data.Erro) {
+                alert("Erro: " + data.Erro);
+            }
+            PreencheCamposFormulario(document.getElementById("frmUser"), {});
+            PreencherDadosUsuario(data.UsuId);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -136,37 +162,44 @@ function EditarUsuario(e) {
 /**
  * Retorna os dados de um usuario pelo Id e preenche o formulário
  * 
- * @param {number} idUser 
+ * @author Lino Pegoretti
+ * @param {number} usuId
+ * @returns {object} 
  */
-function PreencherDadosUsuario(idUser) {
-    if (!idUser) {
+function PreencherDadosUsuario(usuId) {
+    if (!usuId) {
         return false;
     }
     var formularioHtml = document.getElementById("frmUser");
-    // TODO - Melhorar a forma de construção da url 
     return $.ajax({
         url: "../Servidor/Controllers/user.asp",
-        data: {
-            fnTarget: "BuscarUsuarioPorId",
-            usuId:idUser
-        },
         type: 'GET',
         contentType: 'application/json',
+        data: {
+            fnTarget: "BuscarUsuarioPorId",
+            usuId: usuId
+        },
         success: function (data) {
-            setFormCampos(formularioHtml, data);
+            PreencheCamposFormulario(formularioHtml, data);
+        },
+        error: function (xhr, status, error) {
+            alert("Erro: " + xhr + status + error);
         }
     });
 }
+
 /**
- *
  * Preenche um formulário com o objeto JSON, e retorna o próprio formulário
  *
  * @author Lino Pegoretti
- * @param {formularioHtml} formularioHtml
+ * @param {HTMLFormElement} formularioHtml
  * @param {JSON} prJSON
- * @returns {formularioHtml}
+ * @returns {HTMLFormElement}
  */
-function setFormCampos(formularioHtml, prJSON) {
+function PreencheCamposFormulario(formularioHtml, prJSON) {
+    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
+    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
+    //          - Verificar outra forma de fazer o laço, utilizar for in  
     var n = 0;
     while (formularioHtml[n]) {
         var txtNome = formularioHtml[n].name;
@@ -174,4 +207,27 @@ function setFormCampos(formularioHtml, prJSON) {
         n++;
     }
     return formularioHtml;
+}
+
+/**
+ * Captura os dados de um formulário HTML e retorna um objeto com os dados 
+ * desse formulário
+ * 
+ * @author Lino Pegoretti
+ * @param {HTMLFormElement} formularioHtml 
+ * @returns {Object}
+ *  
+ */
+function CapturaCamposFormulario(formularioHtml) {
+    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
+    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
+    //          - Verificar outra forma de fazer o laço, utilizar for in  
+    var n = 0;
+    var objRetorno = {};
+    while (formularioHtml[n]) {
+        var campo = formularioHtml[n];
+        objRetorno[campo.name] = campo.value === "" ? null : campo.value;
+        n++;
+    }
+    return objRetorno;
 }

@@ -89,7 +89,6 @@ Class cUsuario
         '
         ' TODO Lógica de inserção de usuários novos
         '
-        stop
         sql="INSERT INTO [dbo].[usuario] (usuario,senha,nome,endereco,cidade,cep,estadoid) VALUES ("
         sql=sql & "'" & ObjUsuario.getUsuario() & "',"
         sql=sql & "'" & ObjUsuario.getSenha() & "',"
@@ -97,24 +96,43 @@ Class cUsuario
         sql=sql & "'" & ObjUsuario.getEndereco() & "',"
         sql=sql & "'" & ObjUsuario.getCidade() & "',"
         sql=sql & "'" & ObjUsuario.getCep() & "',"
-        sql=sql & "'" & ObjUsuario.getIdEstado() & "');SELECT SCOPE_IDENTITY() As usuid"
+        sql=sql & "'" & ObjUsuario.getIdEstado() & "');"
         on error resume next
-        'Set rs=Server.CreateObject("ADODB.recordset")
-        set rs = cn.Execute(sql)
-        'rs.Open "select @@identity as 'usuid';", cn
-         usid = rs("usuid")
-        set InsercaoUsuario =0
-        'if err=0 then
-         '   set InsercaoUsuario = "Registro gravado com sucesso"
-        'end if        
+        cn.Execute(sql)
+        stop
+        if err<>0 then
+            InsercaoUsuario =  err.Description
+        else    
+            Set rs=Server.CreateObject("ADODB.recordset")
+            rs.Open "SELECT SCOPE_IDENTITY() As usuid;", cn
+            InsercaoUsuario = rs("usuid").value
+            rs.close()
+        end if
 	end function
 
     'Update de usuários
-    public function UpadateUsuario(Id)
-        '
-        ' TODO Lógica de update de usuários
-        '
-		set UpadateUsuario = rs
+    public function UpadateUsuario(cn,ObjUsuario)
+        stop
+        sql="UPDATE [dbo].[usuario] SET "
+        sql=sql & "'" & ObjUsuario.getUsuario() & "',"
+        sql=sql & "'" & ObjUsuario.getSenha() & "',"
+        sql=sql & "'" & ObjUsuario.getNome() & "',"
+        sql=sql & "'" & ObjUsuario.getEndereco() & "',"
+        sql=sql & "'" & ObjUsuario.getCidade() & "',"
+        sql=sql & "'" & ObjUsuario.getCep() & "',"
+        sql=sql & "'" & ObjUsuario.getIdEstado() & "';"
+        sql=sql & "WHERE usuid=" & ObjUsuario.usuId
+        on error resume next
+        cn.Execute(sql)
+        stop
+        if err<>0 then
+            InsercaoUsuario =  err.Description
+        else    
+            Set rs=Server.CreateObject("ADODB.recordset")
+            rs.Open "SELECT SCOPE_IDENTITY() As usuid;", cn
+            InsercaoUsuario = rs("usuid").value
+            rs.close()
+        end if
 	end function
 
     'Buscar usuários do banco de dados
@@ -124,7 +142,6 @@ Class cUsuario
         '
         ' definir o SQL para pesquisa de acordo com a entrada
         ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
-        sql = "SELECT [nome],[usuario],[endereco],[cidade],[cep],[usuid] FROM [treinamento].[dbo].[usuario]"
         sqlPesquisa = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] "
         sqlPesquisa = sqlPesquisa & "FROM [treinamento].[dbo].[usuario] WHERE [usuario] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
@@ -145,7 +162,7 @@ Class cUsuario
     end function
     
     '
-    'Buscar um usuário para efetuar o login
+    'Buscar um usuário para edição
     '
     public function BuscarUsuarioPorId(cn,usuId)  
         sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuId='" & usuId & "'" 

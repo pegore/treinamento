@@ -28,7 +28,8 @@
         <label class="col-2" for="txtCep">Cep:</label>
         <input class="col-4 textfield" type="text" id="txtCep" name="txtCep" placeholder="CEP">      
         <label class="col-2 pl-sm" for="selEstados">Estado:</label>
-        <select class="col-4 textfield" id="selEstados" name="selEstados">        
+        <select class="col-4 textfield" id="selEstados" name="selEstados">
+          <option value="0">Selecione um Estado</option>
         </select>
       </div>
       <div class="row">
@@ -38,8 +39,8 @@
       </div>
     </form>
   </main>
-   <!--#include file="Includes\JScripts.inc"--> 
-   <script src="JScripts/Internos/UsuarioCadastro.js" type="text/javascript"></script>
+  <script src="JScripts/Externos/Jquery-3-4-1.js" type="text/javascript"></script>
+  <script src="JScripts/Internos/UsuarioCadastro.js" type="text/javascript"></script>
 </body>
 
 
