@@ -64,7 +64,7 @@ Class cUsuario
     End sub
 
     Public function getCep()
-        getCep = Cidade
+        getCep = Cep
     End function
 
     Public sub setCep(byval p_cep)
@@ -110,24 +110,21 @@ Class cUsuario
     public function UpdateUsuario(cn,ObjUsuario)
         stop
         sql="UPDATE [dbo].[usuario] SET "
-        sql=sql & "'" & ObjUsuario.getUsuario() & "',"
-        sql=sql & "'" & ObjUsuario.getSenha() & "',"
-        sql=sql & "'" & ObjUsuario.getNome() & "',"
-        sql=sql & "'" & ObjUsuario.getEndereco() & "',"
-        sql=sql & "'" & ObjUsuario.getCidade() & "',"
-        sql=sql & "'" & ObjUsuario.getCep() & "',"
-        sql=sql & "'" & ObjUsuario.getIdEstado() & "'"
-        sql=sql & "WHERE usuid=" & ObjUsuario.getId() & "';"
+        sql=sql & "usuario = '" & ObjUsuario.getUsuario() & "',"
+        sql=sql & "senha = '" & ObjUsuario.getSenha() & "',"
+        sql=sql & "nome = '" & ObjUsuario.getNome() & "',"
+        sql=sql & "endereco = '" & ObjUsuario.getEndereco() & "',"
+        sql=sql & "cidade = '" & ObjUsuario.getCidade() & "',"
+        sql=sql & "cep = '" & ObjUsuario.getCep() & "',"
+        sql=sql & "estadoid = '" & ObjUsuario.getIdEstado() & "'"
+        sql=sql & " WHERE usuid=" & ObjUsuario.getId() & ";"
         on error resume next
         cn.Execute(sql)
         stop
         if err<>0 then
             UpdateUsuario =  err.Description
         else    
-            Set rs=Server.CreateObject("ADODB.recordset")
-            rs.Open "SELECT SCOPE_IDENTITY() As usuid;", cn
-            UpdateUsuario = rs("usuid").value
-            rs.close()
+            UpdateUsuario = Cint(ObjUsuario.getId())
         end if
 	end function
 
