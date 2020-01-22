@@ -99,9 +99,9 @@ function TabelaCriarCabecalho(tabela, dadosCabecalho) {
         novaLinha.appendChild(th);
     }
 }
-function TabelaCriarCorpo(tabela, dadosCabecalho) {
+function TabelaCriarCorpo(tabela, dadosCorpo) {
     var tbody = tabela.createTBody();
-    for (var element of dadosCabecalho) {
+    for (var element of dadosCorpo) {
         var row = tbody.insertRow();
         for (key in element) {
             var cell = row.insertCell();
@@ -109,6 +109,7 @@ function TabelaCriarCorpo(tabela, dadosCabecalho) {
                 var a = document.createElement("a");
                 var params = new URLSearchParams();
                 params.append(key, element[key]);
+                // TODO - Melhorar a forma de construção da url criar objeto URL
                 var url = 'usuarioCadastro.asp?' + params.toString();
                 a.href = url;
                 var imagem = document.createElement("IMG");

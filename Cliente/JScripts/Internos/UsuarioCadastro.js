@@ -65,11 +65,7 @@ function BuscarEstados(idElemento) {
             fnTarget: "BuscarEstados"
         },
         success: function (data) {
-            var estados = data['Registros'];
-            // var opt = document.createElement('option');
-            // opt.innerHTML = "Selecione Estado";
-            // opt.value = 0;
-            // idElemento.appendChild(opt);
+            var estados = data['Registros'];            
             for (var i = 0; i < estados.length; i++) {
                 var opt = document.createElement('option');
                 opt.innerHTML = estados[i]['Nome'];
