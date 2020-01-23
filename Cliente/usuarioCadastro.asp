@@ -9,7 +9,7 @@
   <!--#include file="./Includes/TopMenu.inc"-->
   <main class="col-12">
     <div class="centralizar">
-      <form class="column spacing" name="frmUser" id="frmUser" autoComplete="off">
+      <form class="column spacing col-12" name="frmUser" id="frmUser" autoComplete="off">
         <h3 class="center col-12">Cadastro de Usuários</h3>
         <div class="row form-group items-center">
           <label class="col-2" for="txtUsuario">Usuário:</label>

@@ -8,7 +8,7 @@
   <!--#include file="./Includes/TopMenu.inc"-->
   <main class="col-12">
     <div class="centralizar">
-      <table class="table" id="tblUsuarios">
+      <table class="table" id="tblTarefas">
         <caption>
           <h3 class="center col-12">Lista de Tarefas</h3>
         </caption>

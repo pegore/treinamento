@@ -65,87 +65,85 @@ Class cTarefa
     ' Métodos complementares
     '
 	
-    ' 'Inserção de tarefas
-    ' public function InsercaoTarefa(cn,ObjTarefa)
-    ' stop
-    '     sql="INSERT INTO [dbo].[tarefa] ([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES ("
-    '     sql=sql & "'" & ObjTarefa.getTitulo() & "',"
-    '     sql=sql & "'" & ObjTarefa.getGeradorId() & "',"
-    '     sql=sql & "'" & ObjTarefa.getDataGeracao() & "',"
-    '     sql=sql & "'" & ObjTarefa.getStatus() & "',"
-    '     sql=sql & "'" & ObjTarefa.getDescricao() & "');"
-    '     on error resume next
-    '     cn.Execute(sql)
-    '     if err<>0 then
-    '         InsercaoTarefa =  err.Description
-    '     else    
-    '         Set rs=Server.CreateObject("ADODB.recordset")
-    '         rs.Open "SELECT SCOPE_IDENTITY() As tarID;", cn
-    '         InsercaoTarefa = rs("tarID").value
-    '         rs.close()
-    '     end if
-	' end function
+    'Inserção de tarefas
+    public function InsercaoTarefa(cn,ObjTarefa)
+    stop
+        sql="INSERT INTO [dbo].[tarefa] ([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES ("
+        sql=sql & "'" & ObjTarefa.getTitulo() & "',"
+        sql=sql & "'" & ObjTarefa.getGeradorId() & "',"
+        sql=sql & "'" & ObjTarefa.getDataGeracao() & "',"
+        sql=sql & "'" & ObjTarefa.getStatus() & "',"
+        sql=sql & "'" & ObjTarefa.getDescricao() & "');"
+        on error resume next
+        cn.Execute(sql)
+        if err<>0 then
+            InsercaoTarefa =  err.Description
+        else    
+            Set rs=Server.CreateObject("ADODB.recordset")
+            rs.Open "SELECT SCOPE_IDENTITY() As tarID;", cn
+            InsercaoTarefa = rs("tarID").value
+            rs.close()
+        end if
+	end function
 
-    ' 'Update de tarefas
-    ' public function UpdateTitulo(cn,ObjTarefa)
-    ' stop
-    '     sql="UPDATE [dbo].[tarefa] SET "
-    '     sql=sql & "[tarTitulo] = '" & ObjTarefa.getTitulo() & "',"
-    '     sql=sql & "[geradorID] = '" & ObjTarefa.getGeradorId() & "',"
-    '     sql=sql & "[tarData] = '" & ObjTarefa.getDataGeracao() Geracao
-    '     sql=sql & "[tarStatus] = '" & ObjTarefa.getStatus() & "',"
-    '     sql=sql & "[tarDescricao] = '" & ObjTarefa.getDescricao() & "'"
-    '     sql=sql & " WHERE [tarID]=" & ObjTarefa.getId() & ";"
-    '     on error resume next
-    '     cn.Execute(sql)
-    '     if err<>0 then
-    '         UpdateTitulo =  err.Description
-    '     else    
-    '         UpdateTitulo = Cint(ObjTarefa.getId())
-    '     end if
-	' end function
+    'Update de tarefas
+    public function UpdateTitulo(cn,ObjTarefa)
+    stop
+        sql="UPDATE [dbo].[tarefa] SET "
+        sql=sql & "[tarTitulo] = '" & ObjTarefa.getTitulo() & "',"
+        sql=sql & "[geradorID] = '" & ObjTarefa.getGeradorId() & "',"
+        sql=sql & "[tarData] = '" & ObjTarefa.getDataGeracao() & "',"
+        sql=sql & "[tarStatus] = '" & ObjTarefa.getStatus() & "',"
+        sql=sql & "[tarDescricao] = '" & ObjTarefa.getDescricao() & "'"
+        sql=sql & " WHERE [tarID]=" & ObjTarefa.getId() & ";"
+        on error resume next
+        cn.Execute(sql)
+        if err<>0 then
+            UpdateTitulo =  err.Description
+        else    
+            UpdateTitulo = Cint(ObjTarefa.getId())
+        end if
+	end function
 
-    ' 'Excluir uma tarefa do banco de dados
-    ' public function ExcluirTarefa(cn,tarID)
-    ' stop
-    '     if(tarID="") then
-    '         ExcluirTarefa = "Usuário não informado"
-    '     else
-    '         sql="DELETE FROM [dbo].[Titulo] WHERE [tarID]='" & tarID & "'"
-    '         on error resume next
-    '         cn.Execute sql, recaffected
-    '         if err<>0 then
-    '             ExcluirTarefa =  err.Description
-    '         else    
-    '             ExcluirTarefa = recaffected
-    '         end if
-    '     end if
-    ' end function
+    'Excluir uma tarefa do banco de dados
+    public function ExcluirTarefa(cn,tarID)
+    stop
+        if(tarID="") then
+            ExcluirTarefa = "Usuário não informado"
+        else
+            sql="DELETE FROM [dbo].[Titulo] WHERE [tarID]='" & tarID & "'"
+            on error resume next
+            cn.Execute sql, recaffected
+            if err<>0 then
+                ExcluirTarefa =  err.Description
+            else    
+                ExcluirTarefa = recaffected
+            end if
+        end if
+    end function
 
-    ' 'Buscar tarefas no banco de dados
-    ' public function BuscarTarefas(cn, palavraParaPesquisa)
-    '     stop
-    '     ' definir o SQL para pesquisa de acordo com a entrada
-    '     ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
-    '     sqlPesquisa = "SELECT [tarID],[tarTitulo],[tarDescricao],[tarData],[tarStatus] "
-    '     sqlPesquisa = sqlPesquisa & "FROM [tarefa] WHERE [tarTitulo] LIKE '%"
-    '     sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
-    '     Set rs=Server.CreateObject("ADODB.recordset")
-    '     rs.CursorLocation = 3 ' adUseClient
-    '     rs.Open sqlPesquisa, cn, &H0001
-	' 	set BuscarTarefas = rs
-	' end function
+    'Buscar tarefas no banco de dados
+    public function BuscarTarefas(cn, palavraParaPesquisa)
+        ' definir o SQL para pesquisa de acordo com a entrada
+        ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
+        sqlPesquisa = "SELECT [tarID],[tarTitulo],[tarDescricao],[tarData],[tarStatus] "
+        sqlPesquisa = sqlPesquisa & "FROM [tarefa] WHERE [tarTitulo] LIKE '%"
+        sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
+        Set rs=Server.CreateObject("ADODB.recordset")
+        rs.CursorLocation = 3 ' adUseClient
+        rs.Open sqlPesquisa, cn, &H0001
+		set BuscarTarefas = rs
+	end function
 
-    ' '
-    ' 'Buscar uma tarefa para edição
-    ' '
-    ' public function BuscarTituloPorId(cn,tarID)
-    ' stop  
-    '     sql = "SELECT * FROM [tarefa] where [tarID]='" & tarID & "'" 
-    '     Set rs=Server.CreateObject("ADODB.recordset")
-    '     rs.Open sql, cn, &H0001
-    '     set BuscarTituloPorId = rs
-    ' end function
+    '
+    'Buscar uma tarefa para edição
+    '
+    public function BuscarTarefaPorId(cn,tarID)
+        sql = "SELECT * FROM [tarefa] where [tarID]='" & tarID & "'" 
+        Set rs=Server.CreateObject("ADODB.recordset")
+        rs.Open sql, cn, &H0001
+        set BuscarTarefaPorId = rs
+    end function
 End Class
 
 

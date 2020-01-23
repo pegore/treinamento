@@ -1,8 +1,10 @@
+const url = "../Servidor/Controllers/tarefa.asp";
+
 document.addEventListener('DOMContentLoaded', function () {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
-    var tarefaId = urlParams.get('TarefaId');
-    AdicionarEventos(tarefaId);
+    var idTarefa = urlParams.get('IdTarefa');
+    AdicionarEventos(idTarefa);
 });
 
 /**
@@ -14,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
  *      - Carrega os dados de um usuário quando entra na página se o id estiver na url
  * 
  * @author Lino Pegoretti
- * @param {Number} tarefaId
+ * @param {Number} idTarefa
  */
-function AdicionarEventos(tarefaId) {
+function AdicionarEventos(idTarefa) {
     $selGerador = document.getElementById("selGerador");
     $btnCadastrar = document.getElementById("btnCadastrar");
     $btnAlterar = document.getElementById("btnAlterar");
@@ -26,7 +28,7 @@ function AdicionarEventos(tarefaId) {
     $btnNovo.addEventListener("click", function () {
         //NovoUsuario(e);
     });
-    if (!tarefaId) {
+    if (!idTarefa) {
         if ($btnExcluir) {
             $btnExcluir.remove();
         }
@@ -34,7 +36,7 @@ function AdicionarEventos(tarefaId) {
             $btnAlterar.remove();
         }
         $btnCadastrar.addEventListener("click", function (e) {
-            CadastrarUsuario(e);
+            CadastrarTarefa(e);
         });
         if ($btnCadastrar.classList.contains("col-4")) {
             $btnCadastrar.classList.toggle('col-6');
@@ -46,13 +48,13 @@ function AdicionarEventos(tarefaId) {
     }
 
     $btnAlterar.addEventListener("click", function (e) {
-        EditarUsuario(e, usuid);
+        EditarTarefa(e, idTarefa);
     });
 
     $btnExcluir.addEventListener("click", function (e) {
-        ExcluirUsuario(e, usuid);
+        ExcluirUsuario(e, idTarefa);
     });
-    PreencherDadosUsuario(usuid);
+    PreencherDadosUsuario(idTarefa);
 }
 
 /**
@@ -67,18 +69,18 @@ function BuscarGeradores(elemento) {
         return false;
     }
     return $.ajax({
-        url: "../Servidor/Controllers/estado.asp",
+        url: "../Servidor/Controllers/user.asp",
         type: 'GET',
         contentType: 'application/json',
         data: {
             fnTarget: "BuscarGeradores"
         },
         success: function (data) {
-            var estados = data['Registros'];
-            for (var i = 0; i < estados.length; i++) {
+            var geradores = data['Registros'];
+            for (var i = 0; i < geradores.length; i++) {
                 var opt = document.createElement('option');
-                opt.innerHTML = estados[i]['Nome'];
-                opt.value = estados[i]['Id'];
+                opt.innerHTML = geradores[i]['Nome'];
+                opt.value = geradores[i]['UsuId'];
                 elemento.appendChild(opt);
             }
         }
@@ -92,23 +94,23 @@ function BuscarGeradores(elemento) {
  * @param {Event} event
  * @returns {Object} 
  */
-function CadastrarUsuario(event) {
-    var usuario = CapturaCamposFormulario(event.currentTarget.form);
+function CadastrarTarefa(event) {
+    debugger;
+    var tarefa = CapturaCamposFormulario(event.currentTarget.form);
     data = {
-        fnTarget: "CadastrarUsuario",
-        usuario: usuario.txtUsuario,
-        senha: usuario.pwdSenha,
-        nome: usuario.txtNome,
-        endereco: usuario.txtEndereco,
-        cidade: usuario.txtCidade,
-        cep: usuario.txtCep,
-        estado: usuario.selGerador
+        fnTarget: "CadastrarTarefa",
+        Titulo: tarefa.txtTitulo,
+        Gerador: tarefa.selGerador,
+        DataGeracao: tarefa.txtDataGeracao,
+        Status: tarefa.selStatus,
+        Descricao: tarefa.txtDescricao
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: url,
         type: 'POST',
         data: data,
         success: function (data) {
+            debugger
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
@@ -128,13 +130,13 @@ function CadastrarUsuario(event) {
  * @param {Event} event 
  * @returns {object}
  */
-function EditarUsuario(event, usuid) {
+function EditarTarefa(event, idTarefa) {
     // TODO - Fazer a validação dos dados antes de enviar ao servidor
     debugger
     var usuario = CapturaCamposFormulario(event.currentTarget.form);
     data = {
-        fnTarget: "EditarUsuario",
-        usuid: usuid,
+        fnTarget: "EditarTarefa",
+        idTarefa: idTarefa,
         usuario: usuario.txtUsuario,
         senha: usuario.pwdSenha,
         nome: usuario.txtNome,
@@ -144,7 +146,7 @@ function EditarUsuario(event, usuid) {
         estado: usuario.selGerador
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: url,
         type: 'POST',
         data: data,
         success: function (data) {
@@ -152,7 +154,7 @@ function EditarUsuario(event, usuid) {
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            PreencherDadosUsuario(data.UsuId);
+            PreencherDadosTarefa(data.IdTarefa);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -173,7 +175,7 @@ function ExcluirUsuario(event, usuid) {
         usuid: usuid
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: url,
         type: 'POST',
         data: data,
         success: function (data) {
@@ -194,28 +196,30 @@ function ExcluirUsuario(event, usuid) {
  * Retorna os dados de um usuario pelo Id e preenche o formulário
  * 
  * @author Lino Pegoretti
- * @param {number} usuId
+ * @param {number} idTarefa
  * @returns {object} 
  */
-function PreencherDadosUsuario(usuId) {
-    if (!usuId) {
+function PreencherDadosUsuario(idTarefa) {
+    if (!idTarefa) {
         return false;
     }
-    var $formularioHtml = document.getElementById("frmUser");
+    debugger;
+    var $formularioHtml = document.getElementById("frmTarefa");
     $formularioHtml.reset();
     var $btnCadastrar = document.getElementById("btnCadastrar");
     if ($btnCadastrar) {
         $btnCadastrar.remove();
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: url,
         type: 'GET',
         contentType: 'application/json',
         data: {
-            fnTarget: "BuscarUsuarioPorId",
-            usuId: usuId
+            fnTarget: "BuscarTarefaPorId",
+            idTarefa: idTarefa
         },
         success: function (data) {
+            debugger;
             PreencheCamposFormulario($formularioHtml, data);
         },
         error: function (xhr, status, error) {

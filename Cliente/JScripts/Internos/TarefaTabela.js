@@ -16,7 +16,6 @@ function AdicionarEventos() {
 }
 
 function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
-    debugger
     dadosPesquisa = {
         "fnTarget": fnTarget,
         "RegistrosPorPagina": RegistrosPorPagina,
@@ -27,7 +26,6 @@ function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
         type: 'POST',
         data: dadosPesquisa,
         success: function (data) {
-            debugger;
             PreencheTabela(data);
         },
         error: function (xhr, status, error) {
@@ -57,8 +55,8 @@ function TabelaCriarCabecalho(tabela, dadosCabecalho) {
     for (var key of dadosCabecalho) {
         var th = document.createElement("th");
         var texto = document.createTextNode(key);
-        if (key == 'UsuId') {
-            texto = document.createTextNode('Editar');
+        if (key == 'IdTarefa') {
+            texto = document.createTextNode('N°');
         }
         th.appendChild(texto);
         novaLinha.appendChild(th);
@@ -70,18 +68,19 @@ function TabelaCriarCorpo(tabela, dadosCorpo) {
         var row = tbody.insertRow();
         for (key in element) {
             var cell = row.insertCell();
-            if (key == 'UsuId') {
+            if (key == 'IdTarefa') {
                 var a = document.createElement("a");
                 var params = new URLSearchParams();
                 params.append(key, element[key]);
                 // TODO - Melhorar a forma de construção da url criar objeto URL
-                var url = 'usuarioCadastro.asp?' + params.toString();
+                var url = 'TarefaCadastro.asp?' + params.toString();
                 a.href = url;
-                var imagem = document.createElement("IMG");
-                imagem.src = "../Cliente/Images/editar.png";
-                a.appendChild(imagem);
+                a.innerText = element[key];
+                // var imagem = document.createElement("IMG");
+                // imagem.src = "../Cliente/Images/editar.png";
+                //a.appendChild(imagem);
                 cell.appendChild(a);
-                break;
+                continue;
             }
             var text = document.createTextNode(element[key]);
             cell.appendChild(text);

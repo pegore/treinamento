@@ -238,6 +238,7 @@ function PreencheCamposFormulario(formularioHtml, prJSON) {
     //          - Verificar outra forma de fazer o laço, utilizar for in  
     var n = 0;
     while (formularioHtml[n]) {
+        debugger;
         var txtNome = formularioHtml[n].name;
         formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
         n++;
