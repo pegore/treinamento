@@ -12,20 +12,22 @@ function AdicionarEventos() {
     *   - qtd dadosCorpo por pagina
     *   - botão editar registro
     */
-    BuscarUsuarios("BuscarUsuariosPaginados", 20, 1);
+    BuscarTarefas("BuscarTarefasPaginada", 20, 1);
 }
 
-function BuscarUsuarios(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
+function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
+    debugger
     dadosPesquisa = {
         "fnTarget": fnTarget,
         "RegistrosPorPagina": RegistrosPorPagina,
         "PaginaPesquisa": PaginaPesquisa,
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: "../Servidor/Controllers/tarefa.asp",
         type: 'POST',
         data: dadosPesquisa,
         success: function (data) {
+            debugger;
             PreencheTabela(data);
         },
         error: function (xhr, status, error) {
@@ -43,10 +45,10 @@ function PreencheTabela(dados) {
         "PaginaAtual": dados.PaginaAtual,
         "TotalPaginas": dados.TotalPaginas,
     }
-    var $tblUsuarios = document.getElementById("tblUsuarios");
-    TabelaCriarCabecalho($tblUsuarios, dadosCabecalho);
-    TabelaCriarCorpo($tblUsuarios, dadosCorpo);
-    TabelaCriarRodape($tblUsuarios, dadosRodape);
+    var $tblTarefas = document.getElementById("tblTarefas");
+    TabelaCriarCabecalho($tblTarefas, dadosCabecalho);
+    TabelaCriarCorpo($tblTarefas, dadosCorpo);
+    TabelaCriarRodape($tblTarefas, dadosRodape);
 }
 
 function TabelaCriarCabecalho(tabela, dadosCabecalho) {

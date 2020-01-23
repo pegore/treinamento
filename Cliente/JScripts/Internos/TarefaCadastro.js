@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
-    var usuid = urlParams.get('UsuId');
-    AdicionarEventos(usuid);
+    var tarefaId = urlParams.get('TarefaId');
+    AdicionarEventos(tarefaId);
 });
 
 /**
@@ -14,19 +14,19 @@ document.addEventListener('DOMContentLoaded', function () {
  *      - Carrega os dados de um usuário quando entra na página se o id estiver na url
  * 
  * @author Lino Pegoretti
- * @param {Number} usuid
+ * @param {Number} tarefaId
  */
-function AdicionarEventos(usuid) {
-    $selEstado = document.getElementById("selEstado");
+function AdicionarEventos(tarefaId) {
+    $selGerador = document.getElementById("selGerador");
     $btnCadastrar = document.getElementById("btnCadastrar");
     $btnAlterar = document.getElementById("btnAlterar");
     $btnExcluir = document.getElementById("btnExcluir");
     $btnNovo = document.getElementById("btnNovo");
-    BuscarEstados($selEstado);
+    BuscarGeradores($selGerador);
     $btnNovo.addEventListener("click", function () {
         //NovoUsuario(e);
     });
-    if (!usuid) {
+    if (!tarefaId) {
         if ($btnExcluir) {
             $btnExcluir.remove();
         }
@@ -62,7 +62,7 @@ function AdicionarEventos(usuid) {
  * @param {HTMLSelectElement} elemento
  * @returns {HTMLOptionElement} 
  */
-function BuscarEstados(elemento, estadoId) {
+function BuscarGeradores(elemento) {
     if (!elemento) {
         return false;
     }
@@ -71,7 +71,7 @@ function BuscarEstados(elemento, estadoId) {
         type: 'GET',
         contentType: 'application/json',
         data: {
-            fnTarget: "BuscarEstados"
+            fnTarget: "BuscarGeradores"
         },
         success: function (data) {
             var estados = data['Registros'];
@@ -102,7 +102,7 @@ function CadastrarUsuario(event) {
         endereco: usuario.txtEndereco,
         cidade: usuario.txtCidade,
         cep: usuario.txtCep,
-        estado: usuario.selEstado
+        estado: usuario.selGerador
     }
     return $.ajax({
         url: "../Servidor/Controllers/user.asp",
@@ -141,7 +141,7 @@ function EditarUsuario(event, usuid) {
         endereco: usuario.txtEndereco,
         cidade: usuario.txtCidade,
         cep: usuario.txtCep,
-        estado: usuario.selEstado
+        estado: usuario.selGerador
     }
     return $.ajax({
         url: "../Servidor/Controllers/user.asp",

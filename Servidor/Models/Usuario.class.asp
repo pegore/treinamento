@@ -108,7 +108,6 @@ Class cUsuario
 
     'Update de usuários
     public function UpdateUsuario(cn,ObjUsuario)
-        stop
         sql="UPDATE [dbo].[usuario] SET "
         sql=sql & "usuario = '" & ObjUsuario.getUsuario() & "',"
         sql=sql & "senha = '" & ObjUsuario.getSenha() & "',"
@@ -120,13 +119,28 @@ Class cUsuario
         sql=sql & " WHERE usuid=" & ObjUsuario.getId() & ";"
         on error resume next
         cn.Execute(sql)
-        stop
         if err<>0 then
             UpdateUsuario =  err.Description
         else    
             UpdateUsuario = Cint(ObjUsuario.getId())
         end if
 	end function
+
+    'Excluir um usuário do banco de dados
+    public function ExcluirUsuario(cn,usuId)
+        if(usuid="") then
+            ExcluirUsuario = "Usuário não informado"
+        else
+            sql="DELETE FROM [dbo].[usuario] WHERE [usuid]='" & usuId & "'"
+            on error resume next
+            cn.Execute sql, recaffected
+            if err<>0 then
+                ExcluirUsuario =  err.Description
+            else    
+                ExcluirUsuario = recaffected
+            end if
+        end if
+    end function
 
     'Buscar usuários do banco de dados
     public function BuscarUsuarios(cn, palavraParaPesquisa)
