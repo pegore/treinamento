@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', function () {
-    AdicionarEventos(); 
+const url = "../Servidor/Controllers/tarefa.asp";
+window.addEventListener('DOMContentLoaded', function () {
+    BuscarTarefas("BuscarTarefasPaginada", 20, 1);
+    AdicionarEventos();
 });
 
 function AdicionarEventos() {
@@ -12,7 +14,7 @@ function AdicionarEventos() {
     *   - qtd dadosCorpo por pagina
     *   - botão editar registro
     */
-    BuscarTarefas("BuscarTarefasPaginada", 20, 1);
+
 }
 
 function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
@@ -22,7 +24,7 @@ function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
         "PaginaPesquisa": PaginaPesquisa,
     }
     return $.ajax({
-        url: "../Servidor/Controllers/tarefa.asp",
+        url: url,
         type: 'POST',
         data: dadosPesquisa,
         success: function (data) {
@@ -33,7 +35,42 @@ function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
         }
     });
 }
+function AlterarStatus(event) {
+    var status = event.currentTarget.getAttribute("Status");
+    var imagem = event.currentTarget;
+    if (status == '0' || status == '1') {
+        imagem.src = "../Cliente/Images/7.gif";
+        imagem.setAttribute("Status", 7);
+        statusNovo = 7
+    } else if (status == '7') {
+        imagem.src = "../Cliente/Images/9.gif";
+        imagem.setAttribute("Status", 9);
+        statusNovo = 9
+    } else if (status == '9') {
+        imagem.src = "../Cliente/Images/1.gif";
+        imagem.setAttribute("Status", 1);
+        statusNovo = 1
+    }
+    data = {
+        fnTarget: "AlterarStatus",
+        idTarefa: event.currentTarget.getAttribute("IdTarefa"),
+        status: statusNovo
+    }
+    return $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: function (data) {
+            if (data.Erro) {
+                alert("Erro: " + data.Erro);
+            }
 
+        },
+        error: function (xhr, status, error) {
+            alert("Erro: " + xhr + status + error);
+        }
+    });
+}
 function PreencheTabela(dados) {
     var dadosCabecalho = Object.keys(dados.Registros[0]);
     var dadosCorpo = dados.Registros;
@@ -62,6 +99,25 @@ function TabelaCriarCabecalho(tabela, dadosCabecalho) {
         novaLinha.appendChild(th);
     }
 }
+
+function CriaInput(event) {
+    debugger;
+    event.stopImmediatePropagation();
+    elemento = event.currentTarget;
+    var input = document.createElement("input");
+    input.type = 'text';
+    input.className = 'col-2 textfield';
+    input.value = elemento.innerText;
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            debugger;
+        }
+    });
+    elemento.innerText = '';
+    elemento.appendChild(input);
+}
+
 function TabelaCriarCorpo(tabela, dadosCorpo) {
     var tbody = tabela.createTBody();
     for (var element of dadosCorpo) {
@@ -76,12 +132,30 @@ function TabelaCriarCorpo(tabela, dadosCorpo) {
                 var url = 'TarefaCadastro.asp?' + params.toString();
                 a.href = url;
                 a.innerText = element[key];
-                // var imagem = document.createElement("IMG");
-                // imagem.src = "../Cliente/Images/editar.png";
-                //a.appendChild(imagem);
                 cell.appendChild(a);
                 continue;
+            };
+            if (key == 'Titulo') {
+                cell.id = element.IdTarefa;
+                cell.addEventListener("dblclick", function (e) {
+                    e.stopImmediatePropagation();
+                    e.stopPropagation();
+                    CriaInput(e);
+                });
             }
+            if (key == 'Status' && element[key] != 0) {
+                var imagem = document.createElement("IMG");
+                imagem.src = "../Cliente/Images/" + element[key] + ".gif";
+                imagem.alt = "Não Iniciada";
+                imagem.setAttribute("Status", element[key]);
+                imagem.setAttribute("IdTarefa", element['IdTarefa']);
+                imagem.addEventListener("dblclick", function (e) {
+                    AlterarStatus(e);
+                });
+                cell.appendChild(imagem);
+                continue;
+
+            };
             var text = document.createTextNode(element[key]);
             cell.appendChild(text);
         }
@@ -131,7 +205,7 @@ function TabelaCriarRodape(tabela, dados) {
 
     var liInfo = document.createElement("li");//<li></li>;
     liInfo.innerText = "Mostrando " + dados.RegistrosPorPagina + " de " + dados.TotalRegistros + " Registros"; // Mostrando 2 de 2 registros
-    
+
     var liQtdRegistros = document.createElement("li");//<li></li>;
     var inputQtdRegistros = document.createElement("input");// <input/>
     inputQtdRegistros.type = "text";//type="text"
@@ -139,7 +213,7 @@ function TabelaCriarRodape(tabela, dados) {
     inputQtdRegistros.name = "txtQtdRegistros";//name="txtQtdRegistros" 
     inputQtdRegistros.value = dados.RegistrosPorPagina;
     lblQtdRegistros = document.createElement("label");
-    lblQtdRegistros.innerText="Quantidade de Registros por Página: "
+    lblQtdRegistros.innerText = "Quantidade de Registros por Página: "
     liQtdRegistros.appendChild(lblQtdRegistros);
     liQtdRegistros.appendChild(inputQtdRegistros);
 

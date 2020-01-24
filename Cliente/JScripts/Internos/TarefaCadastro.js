@@ -26,35 +26,23 @@ function AdicionarEventos(idTarefa) {
     $btnNovo = document.getElementById("btnNovo");
     BuscarGeradores($selGerador);
     $btnNovo.addEventListener("click", function () {
-        //NovoUsuario(e);
+        window.location.href = 'TabelaCadastro.asp';
     });
     if (!idTarefa) {
-        if ($btnExcluir) {
-            $btnExcluir.remove();
-        }
-        if ($btnAlterar) {
-            $btnAlterar.remove();
-        }
+        $btnExcluir.remove();
+        $btnAlterar.remove();
+        $btnCadastrar.classList.toggle('col-6');
+        $btnNovo.classList.toggle('col-6');
         $btnCadastrar.addEventListener("click", function (e) {
             CadastrarTarefa(e);
         });
-        if ($btnCadastrar.classList.contains("col-4")) {
-            $btnCadastrar.classList.toggle('col-6');
-        }
-        if ($btnNovo.classList.contains("col-4")) {
-            $btnNovo.classList.toggle('col-6');
-        }
         return;
     }
-
+    $btnCadastrar.remove();
     $btnAlterar.addEventListener("click", function (e) {
         EditarTarefa(e, idTarefa);
     });
-
-    $btnExcluir.addEventListener("click", function (e) {
-        ExcluirUsuario(e, idTarefa);
-    });
-    PreencherDadosUsuario(idTarefa);
+    PreencherDadosTarefa(idTarefa);
 }
 
 /**
@@ -88,7 +76,7 @@ function BuscarGeradores(elemento) {
 }
 
 /**
- * Cadastra um usuário no servidor e retorna o identificador desse cadastro
+ * Cadastra uma tarefa no servidor e retorna o identificador desse cadastro
  *
  * @author Lino Pegoretti
  * @param {Event} event
@@ -110,12 +98,10 @@ function CadastrarTarefa(event) {
         type: 'POST',
         data: data,
         success: function (data) {
-            debugger
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            PreencheCamposFormulario(document.getElementById("frmUser"), {});
-            PreencherDadosUsuario(data.UsuId);
+            window.location.href = 'TarefaCadastro.asp?IdTarefa=' + data.IdTarefa;
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -133,28 +119,25 @@ function CadastrarTarefa(event) {
 function EditarTarefa(event, idTarefa) {
     // TODO - Fazer a validação dos dados antes de enviar ao servidor
     debugger
-    var usuario = CapturaCamposFormulario(event.currentTarget.form);
+    var tarefa = CapturaCamposFormulario(event.currentTarget.form);
     data = {
         fnTarget: "EditarTarefa",
         idTarefa: idTarefa,
-        usuario: usuario.txtUsuario,
-        senha: usuario.pwdSenha,
-        nome: usuario.txtNome,
-        endereco: usuario.txtEndereco,
-        cidade: usuario.txtCidade,
-        cep: usuario.txtCep,
-        estado: usuario.selGerador
+        Titulo: tarefa.txtTitulo,
+        Gerador: tarefa.selGerador,
+        DataGeracao: tarefa.txtDataGeracao,
+        Status: tarefa.selStatus,
+        Descricao: tarefa.txtDescricao
     }
     return $.ajax({
         url: url,
         type: 'POST',
         data: data,
         success: function (data) {
-            debugger;
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            PreencherDadosTarefa(data.IdTarefa);
+            window.location.href = 'TarefaCadastro.asp?IdTarefa=' + data.IdTarefa;
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -185,7 +168,7 @@ function ExcluirUsuario(event, usuid) {
             if (data.RegistrosAfetados) {
                 alert("Foram Excluídos " + data.RegistrosAfetados + " usuários do banco de dados");
             }
-            window.location.href = "usuarioTabela.asp";
+            window.location.href = "TarefaTabela.asp";
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -199,16 +182,9 @@ function ExcluirUsuario(event, usuid) {
  * @param {number} idTarefa
  * @returns {object} 
  */
-function PreencherDadosUsuario(idTarefa) {
+function PreencherDadosTarefa(idTarefa) {
     if (!idTarefa) {
         return false;
-    }
-    debugger;
-    var $formularioHtml = document.getElementById("frmTarefa");
-    $formularioHtml.reset();
-    var $btnCadastrar = document.getElementById("btnCadastrar");
-    if ($btnCadastrar) {
-        $btnCadastrar.remove();
     }
     return $.ajax({
         url: url,
@@ -219,8 +195,7 @@ function PreencherDadosUsuario(idTarefa) {
             idTarefa: idTarefa
         },
         success: function (data) {
-            debugger;
-            PreencheCamposFormulario($formularioHtml, data);
+            PreencheCamposFormulario(document.getElementById("frmTarefa"), data);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);

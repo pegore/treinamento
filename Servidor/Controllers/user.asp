@@ -53,7 +53,6 @@ Function CadastrarUsuario()
   set ObjConexao = new Conexao
   set cn = ObjConexao.AbreConexao()
   retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)
-  stop
   Response.ContentType = "application/json"
   Response.Write "{"
   If VarType(retorno)=8 then 
@@ -130,6 +129,7 @@ Function BuscarUsuarioPorId()
   If Not rs.Eof Then     
     Response.ContentType = "application/json"
     Response.Write "{"
+    Response.Write """UsuId"": """ & rs("usuId") & ""","
     Response.Write """Usuario"": """ & rs("usuario") & ""","
     Response.Write """Senha"": """ & rs("senha") & ""","
     Response.Write """Nome"": """ & rs("nome") & ""","
@@ -148,12 +148,13 @@ End function
   ' Função para buscar os usuários em modo de paginação respnse write
   '
   Function BuscarUsuariosPaginados()
+    ' // TODO - Acertar a paginação ainda não está funcionando
     Dim numeroTotalRegistros
     Dim numeroTotalPaginas
     set ObjConexao = new Conexao
     set cn = ObjConexao.AbreConexao()
     set ObjUsuario = new cUsuario
-    set rs = objUsuario.BuscarUsuarios(cn, palavraParaPesquisa)  
+    set rs = objUsuario.BuscarUsuarios(cn, palavraParaPesquisa)      
     If Not rs.Eof Then
       numeroTotalPaginas = rs.PageCount
       rs.PageSize = RegistrosPorPagina
@@ -177,7 +178,7 @@ End function
         Response.Write """Cep"": """ & rs("cep") & ""","
         Response.Write """UsuId"": """ & rs("usuid") & """"
         Response.Write "}"
-        if rs.AbsolutePosition < numeroTotalRegistros then
+        if rs.AbsolutePosition < RegistrosPorPagina and rs.AbsolutePosition < numeroTotalRegistros then
           Response.Write ","
         end if
         rs.MoveNext

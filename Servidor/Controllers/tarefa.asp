@@ -38,7 +38,6 @@ Function CadastrarTarefa()
   '         - Função deve receber o objeto conexão;
   '         - Melhorar o tratamento de erros;
   '         - Melhorar mensagens de retorno;
-  stop 
   set ObjTarefa = new cTarefa
   ObjTarefa.setId(Request("IdTarefa"))
   ObjTarefa.setTitulo(Request("Titulo"))
@@ -54,19 +53,57 @@ Function CadastrarTarefa()
   If VarType(retorno)=8 then 
       Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
   Else
-    Response.Write """UsuId"":""" & retorno & """"
+    Response.Write """IdTarefa"":""" & retorno & """"
   end if
   Response.Write "}"
   ObjConexao.FecharConexao(cn)
 End Function
 
-' '
-' ' Função para atualizar um usuário no banco de dados
-' '
-' Function EditarTarefa(id,status)
-'   stop
-  
-' End Function
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function AlterarStatus()
+  set ObjTarefa = new cTarefa
+  ObjTarefa.setId(idTarefa)
+  ObjTarefa.setStatus(Request("Status"))
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = ObjTarefa.AlterarStatus(cn, ObjTarefa)
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then ' Se for String - Não é a melhor forma mas foi o que consegui fazer
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """IdTarefa"":""" & retorno & """"
+  end if
+  Response.Write "}" 
+  ObjConexao.FecharConexao(cn)
+End Function
+
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function EditarTarefa()
+  set ObjTarefa = new cTarefa
+  ObjTarefa.setId(idTarefa)
+  ObjTarefa.setTitulo(Request("Titulo"))
+  ObjTarefa.setGeradorId(Request("Gerador"))
+  ObjTarefa.setDataGeracao(FormatarDataBanco(Request("DataGeracao")))
+  ObjTarefa.setStatus(Request("Status"))
+  ObjTarefa.setDescricao(Request("Descricao"))
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = ObjTarefa.UpdateTarefa(cn, ObjTarefa)
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then ' Se for String - Não é a melhor forma mas foi o que consegui fazer
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """IdTarefa"":""" & retorno & """"
+  end if
+  Response.Write "}" 
+  ObjConexao.FecharConexao(cn)
+End Function
 
   Function BuscarTarefasPaginada()
     Dim numeroTotalRegistros
@@ -98,7 +135,7 @@ End Function
         Response.Write """DataGeracao"": """ & rs("tarData") & ""","
         Response.Write """Status"": """ & rs("tarStatus") & """"
         Response.Write "}"
-        if rs.AbsolutePosition < numeroTotalRegistros then
+        if rs.AbsolutePosition < RegistrosPorPagina and rs.AbsolutePosition < numeroTotalRegistros then
           Response.Write ","
         end if
         rs.MoveNext
@@ -111,7 +148,7 @@ End Function
 End Function
 
 '
-' Retorna um usuário do Banco de dados para o cliente response write
+' Retorna uma tarefa do Banco de dados para o cliente response write
 '
   Function BuscarTarefaPorId()
     ' // TODO - Função deve receber o objeto conexão
@@ -122,7 +159,7 @@ End Function
     set cn = ObjConexao.AbreConexao()
     set ObjTarefa = new cTarefa
     set rs = ObjTarefa.BuscarTarefaPorId(cn, idTarefa)
-    If Not rs.Eof Then     
+    If Not rs.Eof Then
       Response.ContentType = "application/json"
       Response.Write "{"
       Response.Write """IdTarefa"": """ & rs("tarID") & ""","
@@ -139,14 +176,17 @@ End Function
   
   Function FormatarDataTela(dataSemFormato)
     soHora = split(dataSemFormato," ")
+    hora = "00:00"
+    if (UBound(soHora)>0) then
+      hora = soHora(1)
+    end if
     d = split(soHora(0),"/")
-    FormatarData = d(2) & "-" & d(0) & "-" & d(1) & "T" & soHora(1)
+    FormatarDataTela = d(2) & "-" & d(1) & "-" & d(0) & "T" & hora
   End Function
  
   Function FormatarDataBanco(dataSemFormato)
-  stop
     soHora = split(dataSemFormato,"T")
     d = split(soHora(0),"-")
-    FormatarData = d(2) & "-" & d(0) & "-" & d(1) & " " & soHora(1)
+    FormatarDataBanco = d(0) & "-" & d(2) & "-" & d(1) & " " & soHora(1)
   End Function
 %>

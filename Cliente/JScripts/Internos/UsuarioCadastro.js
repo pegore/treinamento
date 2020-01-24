@@ -24,27 +24,20 @@ function AdicionarEventos(usuid) {
     $btnNovo = document.getElementById("btnNovo");
     BuscarEstados($selEstado);
     $btnNovo.addEventListener("click", function () {
-        //NovoUsuario(e);
+        window.location.href = 'usuarioCadastro.asp';       
     });
+    debugger;
     if (!usuid) {
-        if ($btnExcluir) {
-            $btnExcluir.remove();
-        }
-        if ($btnAlterar) {
-            $btnAlterar.remove();
-        }
+        $btnExcluir.remove();
+        $btnAlterar.remove();
+        $btnCadastrar.classList.toggle('col-6');
+        $btnNovo.classList.toggle('col-6');
         $btnCadastrar.addEventListener("click", function (e) {
             CadastrarUsuario(e);
         });
-        if ($btnCadastrar.classList.contains("col-4")) {
-            $btnCadastrar.classList.toggle('col-6');
-        }
-        if ($btnNovo.classList.contains("col-4")) {
-            $btnNovo.classList.toggle('col-6');
-        }
         return;
     }
-
+    $btnCadastrar.remove();
     $btnAlterar.addEventListener("click", function (e) {
         EditarUsuario(e, usuid);
     });
@@ -112,8 +105,7 @@ function CadastrarUsuario(event) {
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            PreencheCamposFormulario(document.getElementById("frmUser"), {});
-            PreencherDadosUsuario(data.UsuId);
+            window.location.href = 'usuarioCadastro.asp?UsuId=' + data.UsuId;
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -152,7 +144,7 @@ function EditarUsuario(event, usuid) {
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            PreencherDadosUsuario(data.UsuId);
+            window.location.href = 'usuarioCadastro.asp?UsuId=' + data.UsuId;
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -201,12 +193,6 @@ function PreencherDadosUsuario(usuId) {
     if (!usuId) {
         return false;
     }
-    var $formularioHtml = document.getElementById("frmUser");
-    $formularioHtml.reset();
-    var $btnCadastrar = document.getElementById("btnCadastrar");
-    if ($btnCadastrar) {
-        $btnCadastrar.remove();
-    }
     return $.ajax({
         url: "../Servidor/Controllers/user.asp",
         type: 'GET',
@@ -216,7 +202,7 @@ function PreencherDadosUsuario(usuId) {
             usuId: usuId
         },
         success: function (data) {
-            PreencheCamposFormulario($formularioHtml, data);
+            PreencheCamposFormulario(document.getElementById("frmUser"), data);
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -238,7 +224,6 @@ function PreencheCamposFormulario(formularioHtml, prJSON) {
     //          - Verificar outra forma de fazer o laço, utilizar for in  
     var n = 0;
     while (formularioHtml[n]) {
-        debugger;
         var txtNome = formularioHtml[n].name;
         formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
         n++;

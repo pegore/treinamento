@@ -87,8 +87,7 @@ Class cTarefa
 	end function
 
     'Update de tarefas
-    public function UpdateTitulo(cn,ObjTarefa)
-    stop
+    public function UpdateTarefa(cn,ObjTarefa)
         sql="UPDATE [dbo].[tarefa] SET "
         sql=sql & "[tarTitulo] = '" & ObjTarefa.getTitulo() & "',"
         sql=sql & "[geradorID] = '" & ObjTarefa.getGeradorId() & "',"
@@ -99,9 +98,23 @@ Class cTarefa
         on error resume next
         cn.Execute(sql)
         if err<>0 then
-            UpdateTitulo =  err.Description
+            UpdateTarefa =  err.Description
         else    
-            UpdateTitulo = Cint(ObjTarefa.getId())
+            UpdateTarefa = Cint(ObjTarefa.getId())
+        end if
+	end function
+  
+    'Update de tarefas
+    public function AlterarStatus(cn,ObjTarefa)
+        sql="UPDATE [dbo].[tarefa] SET "
+        sql=sql & "[tarStatus] = '" & ObjTarefa.getStatus() & "'"
+        sql=sql & " WHERE [tarID]=" & ObjTarefa.getId() & ";"
+        on error resume next
+        cn.Execute(sql)
+        if err<>0 then
+            AlterarStatus =  err.Description
+        else    
+            AlterarStatus = Cint(ObjTarefa.getId())
         end if
 	end function
 
