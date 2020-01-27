@@ -67,7 +67,6 @@ Class cTarefa
 	
     'Inserção de tarefas
     public function InsercaoTarefa(cn,ObjTarefa)
-    stop
         sql="INSERT INTO [dbo].[tarefa] ([tarTitulo],[geradorID],[tarData],[tarStatus],[tarDescricao]) VALUES ("
         sql=sql & "'" & ObjTarefa.getTitulo() & "',"
         sql=sql & "'" & ObjTarefa.getGeradorId() & "',"
@@ -120,11 +119,10 @@ Class cTarefa
 
     'Excluir uma tarefa do banco de dados
     public function ExcluirTarefa(cn,tarID)
-    stop
         if(tarID="") then
             ExcluirTarefa = "Usuário não informado"
         else
-            sql="DELETE FROM [dbo].[Titulo] WHERE [tarID]='" & tarID & "'"
+            sql="DELETE FROM [tarefa] WHERE [tarID]='" & tarID & "'"
             on error resume next
             cn.Execute sql, recaffected
             if err<>0 then
@@ -136,12 +134,12 @@ Class cTarefa
     end function
 
     'Buscar tarefas no banco de dados
-    public function BuscarTarefas(cn, palavraParaPesquisa)
-        ' definir o SQL para pesquisa de acordo com a entrada
-        ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
+    public function BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao, paginaPesquisa, registrosPorPagina)
         sqlPesquisa = "SELECT [tarID],[tarTitulo],[tarDescricao],[tarData],[tarStatus] "
         sqlPesquisa = sqlPesquisa & "FROM [tarefa] WHERE [tarTitulo] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
+        sqlPesquisa = sqlPesquisa & " ORDER BY " & colunaOrdenacao
+        sqlPesquisa = sqlPesquisa & " OFFSET " & (paginaPesquisa * registrosPorPagina) & " ROWS FETCH NEXT " & registrosPorPagina & " ROWS ONLY;" 
         Set rs=Server.CreateObject("ADODB.recordset")
         rs.CursorLocation = 3 ' adUseClient
         rs.Open sqlPesquisa, cn, &H0001

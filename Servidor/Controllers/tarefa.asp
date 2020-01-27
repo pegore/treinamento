@@ -15,15 +15,15 @@
     '         - Criar um objeto Tarefa e um objeto conexão
     '         - Receber parametros em cada função
     dim palavraParaPesquisa
-    dim RegistrosPorPagina 
-    dim PaginaPesquisa
+    dim registrosPorPagina 
+    dim paginaPesquisa
     dim idTarefa : idTarefa =  Request("idTarefa")
     dim fnTarget : fnTarget = Request("fnTarget")
-    if(IsNumeric(Request("PaginaPesquisa"))) then
-      PaginaPesquisa = Cint(Request("PaginaPesquisa"))
+    if(IsNumeric(Request("paginaPesquisa"))) then
+      paginaPesquisa = Cint(Request("paginaPesquisa"))
     end if
-    if(IsNumeric(Request("RegistrosPorPagina"))) then
-      RegistrosPorPagina = Cint(Request("RegistrosPorPagina"))
+    if(IsNumeric(Request("registrosPorPagina"))) then
+      registrosPorPagina = Cint(Request("registrosPorPagina"))
     end if
     Execute(fnTarget)
   End if
@@ -104,30 +104,50 @@ Function EditarTarefa()
   Response.Write "}" 
   ObjConexao.FecharConexao(cn)
 End Function
+'
+' Função para atualizar um usuário no banco de dados
+'
+Function ExcluirTarefa()
+  set ObjTarefa = new cTarefa
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = ObjTarefa.ExcluirTarefa(cn, idTarefa)
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then ' Se for String - Não é a melhor forma mas foi o que consegui fazer
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """IdTarefa"":""" & retorno & """"
+  end if
+  Response.Write "}" 
+  ObjConexao.FecharConexao(cn)
+End Function
 
   Function BuscarTarefasPaginada()
     Dim numeroTotalRegistros
     Dim numeroTotalPaginas
+    Dim colunaOrdenacao: colunaOrdenacao = "tarID"
+
     set ObjConexao = new Conexao
     set cn = ObjConexao.AbreConexao()
     set ObjTarefa = new cTarefa
-    set rs = ObjTarefa.BuscarTarefas(cn, palavraParaPesquisa)  
+    set rs = ObjTarefa.BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao, paginaPesquisa, registrosPorPagina)  
     If Not rs.Eof Then
       numeroTotalPaginas = rs.PageCount
-      rs.PageSize = RegistrosPorPagina
+      rs.PageSize = registrosPorPagina
       numeroTotalRegistros=rs.RecordCount
-      If PaginaPesquisa < 1 Or PaginaPesquisa > numeroTotalPaginas Then
-        PaginaPesquisa = 1			
+      If paginaPesquisa < 1 Or paginaPesquisa > numeroTotalPaginas Then
+        paginaPesquisa = 1			
       End If    
-      rs.AbsolutePage = PaginaPesquisa
+      rs.AbsolutePage = paginaPesquisa
       Response.ContentType = "application/json"
       Response.Write "{"
       Response.Write """TotalRegistros"":""" & numeroTotalRegistros & ""","
-      Response.Write """RegistrosPorPagina"":""" & RegistrosPorPagina & ""","
-      Response.Write """PaginaAtual"":""" & PaginaPesquisa & ""","
+      Response.Write """RegistrosPorPagina"":""" & registrosPorPagina & ""","
+      Response.Write """PaginaAtual"":""" & paginaPesquisa & ""","
       Response.Write """TotalPaginas"":""" & numeroTotalPaginas & ""","
       Response.Write """Registros"": ["
-      Do While Not (rs.Eof OR rs.AbsolutePage <> PaginaPesquisa)
+      Do While Not (rs.Eof OR rs.AbsolutePage <> paginaPesquisa)
         Response.Write "{"
         Response.Write """IdTarefa"": """ & rs("tarID") & ""","
         Response.Write """Titulo"": """ & rs("tarTitulo") & ""","
@@ -135,7 +155,7 @@ End Function
         Response.Write """DataGeracao"": """ & rs("tarData") & ""","
         Response.Write """Status"": """ & rs("tarStatus") & """"
         Response.Write "}"
-        if rs.AbsolutePosition < RegistrosPorPagina and rs.AbsolutePosition < numeroTotalRegistros then
+        if rs.AbsolutePosition < registrosPorPagina and rs.AbsolutePosition < numeroTotalRegistros then
           Response.Write ","
         end if
         rs.MoveNext

@@ -42,6 +42,9 @@ function AdicionarEventos(idTarefa) {
     $btnAlterar.addEventListener("click", function (e) {
         EditarTarefa(e, idTarefa);
     });
+    $btnExcluir.addEventListener("click", function (e) {
+        ExcluirTarefa(e, idTarefa);
+    });
     PreencherDadosTarefa(idTarefa);
 }
 
@@ -83,7 +86,6 @@ function BuscarGeradores(elemento) {
  * @returns {Object} 
  */
 function CadastrarTarefa(event) {
-    debugger;
     var tarefa = CapturaCamposFormulario(event.currentTarget.form);
     data = {
         fnTarget: "CadastrarTarefa",
@@ -118,7 +120,6 @@ function CadastrarTarefa(event) {
  */
 function EditarTarefa(event, idTarefa) {
     // TODO - Fazer a validação dos dados antes de enviar ao servidor
-    debugger
     var tarefa = CapturaCamposFormulario(event.currentTarget.form);
     data = {
         fnTarget: "EditarTarefa",
@@ -152,10 +153,10 @@ function EditarTarefa(event, idTarefa) {
  * @param {Event} event 
  * @returns {object}
  */
-function ExcluirUsuario(event, usuid) {
+function ExcluirTarefa(event, IdTarefa) {
     data = {
-        fnTarget: "ExcluirUsuario",
-        usuid: usuid
+        fnTarget: "ExcluirTarefa",
+        IdTarefa: IdTarefa
     }
     return $.ajax({
         url: url,

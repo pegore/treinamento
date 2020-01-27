@@ -1,6 +1,8 @@
 const url = "../Servidor/Controllers/tarefa.asp";
+var RegistrosPorPagina = 20;
+var PaginaPesquisa = 0;
 window.addEventListener('DOMContentLoaded', function () {
-    BuscarTarefas("BuscarTarefasPaginada", 20, 1);
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
     AdicionarEventos();
 });
 
@@ -9,26 +11,49 @@ function AdicionarEventos() {
     * Atrelando os eventos da tabela
     * A tabela terá os seguintes eventos:
     *   - carregamento inicial com valores padrões
-    *   - avançar dadosCorpo
-    *   - recuar dadosCorpo
-    *   - qtd dadosCorpo por pagina
+    *   - avançar registros
+    *   - recuar registros
+    *   - qtd registros por pagina
     *   - botão editar registro
     */
 
 }
 
-function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
-    dadosPesquisa = {
-        "fnTarget": fnTarget,
-        "RegistrosPorPagina": RegistrosPorPagina,
-        "PaginaPesquisa": PaginaPesquisa,
+function CriaInput(event) {
+    debugger;
+    event.stopImmediatePropagation();
+    elemento = event.currentTarget;
+    var input = document.createElement("input");
+    input.type = 'text';
+    input.className = 'col-2 textfield';
+    input.value = elemento.innerText;
+    input.id = elemento.id;
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            EditarTitulo(event);
+        }
+    });
+    elemento.innerText = '';
+    elemento.appendChild(input);
+}
+function EditarTitulo(event) {
+    // TODO - Fazer a validação dos dados antes de enviar ao servidor
+    debugger;
+    data = {
+        fnTarget: "EditarTarefa",
+        idTarefa: event.currentTarget.id,
+        titulo: event.currentTarget.value       
     }
     return $.ajax({
         url: url,
         type: 'POST',
-        data: dadosPesquisa,
+        data: data,
         success: function (data) {
-            PreencheTabela(data);
+            debugger;
+            if (data.Erro) {
+                alert("Erro: " + data.Erro);
+            }
+            window.location.href = 'TarefaCadastro.asp?IdTarefa=' + data.IdTarefa;
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -36,6 +61,7 @@ function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
     });
 }
 function AlterarStatus(event) {
+    // TODO - Melhorar esses IF´s não está legal
     var status = event.currentTarget.getAttribute("Status");
     var imagem = event.currentTarget;
     if (status == '0' || status == '1') {
@@ -64,13 +90,32 @@ function AlterarStatus(event) {
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
         }
     });
 }
+
+function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
+    dadosPesquisa = {
+        "fnTarget": fnTarget,
+        "RegistrosPorPagina": RegistrosPorPagina,
+        "PaginaPesquisa": PaginaPesquisa,
+    }
+    return $.ajax({
+        url: url,
+        type: 'POST',
+        data: dadosPesquisa,
+        success: function (data) {
+            PreencheTabela(data);
+        },
+        error: function (xhr, status, error) {
+            alert("Erro: " + xhr + status + error);
+        }
+    });
+}
+
 function PreencheTabela(dados) {
     var dadosCabecalho = Object.keys(dados.Registros[0]);
     var dadosCorpo = dados.Registros;
@@ -81,7 +126,7 @@ function PreencheTabela(dados) {
         "TotalPaginas": dados.TotalPaginas,
     }
     var $tblTarefas = document.getElementById("tblTarefas");
-    TabelaCriarCabecalho($tblTarefas, dadosCabecalho);
+ //   TabelaCriarCabecalho($tblTarefas, dadosCabecalho);
     TabelaCriarCorpo($tblTarefas, dadosCorpo);
     TabelaCriarRodape($tblTarefas, dadosRodape);
 }
@@ -98,24 +143,6 @@ function TabelaCriarCabecalho(tabela, dadosCabecalho) {
         th.appendChild(texto);
         novaLinha.appendChild(th);
     }
-}
-
-function CriaInput(event) {
-    debugger;
-    event.stopImmediatePropagation();
-    elemento = event.currentTarget;
-    var input = document.createElement("input");
-    input.type = 'text';
-    input.className = 'col-2 textfield';
-    input.value = elemento.innerText;
-    input.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            debugger;
-        }
-    });
-    elemento.innerText = '';
-    elemento.appendChild(input);
 }
 
 function TabelaCriarCorpo(tabela, dadosCorpo) {
@@ -163,68 +190,73 @@ function TabelaCriarCorpo(tabela, dadosCorpo) {
 }
 
 function TabelaCriarRodape(tabela, dados) {
-    var tfoot = tabela.createTFoot(); //<tfoot></tfoot>
-    var row = tfoot.insertRow(0); //<tr></tr>
-    var cell = row.insertCell(0);//<th></th>
-    cell.colSpan = tabela.rows[0].cells.length;
+    debugger;
+    var $detalhesRegistros = document.getElementById("txtDetalhesRegistros");
+    $detalhesRegistros.innerText = "Mostrando " + dados.TotalRegistros + " de " + dados.TotalRegistros + " Registros";
+    
+    
+    // var tfoot = tabela.createTFoot(); //<tfoot></tfoot>
+    // var row = tfoot.insertRow(0); //<tr></tr>
+    // var cell = row.insertCell(0);//<th></th>
+    // cell.colSpan = tabela.rows[0].cells.length;
 
-    var div = document.createElement("div");//<div></div>
-    div.setAttribute("class", "pagination");//<div class="pagination">
+    // var div = document.createElement("div");//<div></div>
+    // div.setAttribute("class", "pagination");//<div class="pagination">
 
-    var ul = document.createElement("ul");//<ul></ul>;
+    // var ul = document.createElement("ul");//<ul></ul>;
 
-    var linkPrimeiraPagina = document.createElement("a");//<a></a>
-    linkPrimeiraPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
-    var liPrimeiraPagina = document.createElement("li");//<li></li>;
-    liPrimeiraPagina.innerText = "<<"; // <<
-    linkPrimeiraPagina.appendChild(liPrimeiraPagina);//<a href="#"><li> << </li></a>
+    // var linkPrimeiraPagina = document.createElement("a");//<a></a>
+    // linkPrimeiraPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
+    // var liPrimeiraPagina = document.createElement("li");//<li></li>;
+    // liPrimeiraPagina.innerText = "<<"; // <<
+    // linkPrimeiraPagina.appendChild(liPrimeiraPagina);//<a href="#"><li> << </li></a>
 
-    var linkVoltaUmaPagina = document.createElement("a");//<a></a>
-    linkVoltaUmaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
-    var liVoltaUmaPagina = document.createElement("li");//<li></li>;
-    liVoltaUmaPagina.innerText = "<"; // <
-    linkVoltaUmaPagina.appendChild(liVoltaUmaPagina);//<a href="#"><li> < </li></a>
+    // var linkVoltaUmaPagina = document.createElement("a");//<a></a>
+    // linkVoltaUmaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
+    // var liVoltaUmaPagina = document.createElement("li");//<li></li>;
+    // liVoltaUmaPagina.innerText = "<"; // <
+    // linkVoltaUmaPagina.appendChild(liVoltaUmaPagina);//<a href="#"><li> < </li></a>
 
-    var inputPagina = document.createElement("input");// <input/>
-    inputPagina.type = "text";//type="text"
-    inputPagina.id = "txtPagina";// id="txtPagina"
-    inputPagina.name = "txtPagina";//name="txtPagina" 
+    // var inputPagina = document.createElement("input");// <input/>
+    // inputPagina.type = "text";//type="text"
+    // inputPagina.id = "txtPagina";// id="txtPagina"
+    // inputPagina.name = "txtPagina";//name="txtPagina" 
 
-    var linkAvancaUmaPagina = document.createElement("a");//<a></a>
-    linkAvancaUmaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
-    var liAvancaUmaPagina = document.createElement("li");//<li></li>;
-    liAvancaUmaPagina.innerText = ">"; // >
-    linkAvancaUmaPagina.appendChild(liAvancaUmaPagina);//<a href="#"><li> < </li></a>
+    // var linkAvancaUmaPagina = document.createElement("a");//<a></a>
+    // linkAvancaUmaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
+    // var liAvancaUmaPagina = document.createElement("li");//<li></li>;
+    // liAvancaUmaPagina.innerText = ">"; // >
+    // linkAvancaUmaPagina.appendChild(liAvancaUmaPagina);//<a href="#"><li> < </li></a>
 
-    var linkUltimaPagina = document.createElement("a");//<a></a>
-    linkUltimaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
-    var liUltimaPagina = document.createElement("li");//<li></li>;
-    liUltimaPagina.innerText = ">>"; // >>
-    linkUltimaPagina.appendChild(liUltimaPagina);//<a href="#"><li> >> </li></a>
-
-
-    var liInfo = document.createElement("li");//<li></li>;
-    liInfo.innerText = "Mostrando " + dados.RegistrosPorPagina + " de " + dados.TotalRegistros + " Registros"; // Mostrando 2 de 2 registros
-
-    var liQtdRegistros = document.createElement("li");//<li></li>;
-    var inputQtdRegistros = document.createElement("input");// <input/>
-    inputQtdRegistros.type = "text";//type="text"
-    inputQtdRegistros.id = "txtQtdRegistros";// id="txtQtdRegistros"
-    inputQtdRegistros.name = "txtQtdRegistros";//name="txtQtdRegistros" 
-    inputQtdRegistros.value = dados.RegistrosPorPagina;
-    lblQtdRegistros = document.createElement("label");
-    lblQtdRegistros.innerText = "Quantidade de Registros por Página: "
-    liQtdRegistros.appendChild(lblQtdRegistros);
-    liQtdRegistros.appendChild(inputQtdRegistros);
+    // var linkUltimaPagina = document.createElement("a");//<a></a>
+    // linkUltimaPagina.href = "usuarioTabela.asp?pagina=1&registrosPorPagina=20"; // href="usuarioTabela.asp?pagina=1&registrosPorPagina=20">
+    // var liUltimaPagina = document.createElement("li");//<li></li>;
+    // liUltimaPagina.innerText = ">>"; // >>
+    // linkUltimaPagina.appendChild(liUltimaPagina);//<a href="#"><li> >> </li></a>
 
 
-    ul.appendChild(linkPrimeiraPagina);
-    ul.appendChild(linkVoltaUmaPagina);
-    ul.appendChild(inputPagina);
-    ul.appendChild(linkAvancaUmaPagina);
-    ul.appendChild(linkUltimaPagina);
-    ul.appendChild(liInfo);
-    ul.appendChild(liQtdRegistros);
-    div.appendChild(ul);
-    cell.appendChild(div);
+    // var liInfo = document.createElement("li");//<li></li>;
+    // liInfo.innerText = "Mostrando " + dados.RegistrosPorPagina + " de " + dados.TotalRegistros + " Registros"; // Mostrando 2 de 2 registros
+
+    // var liQtdRegistros = document.createElement("li");//<li></li>;
+    // var inputQtdRegistros = document.createElement("input");// <input/>
+    // inputQtdRegistros.type = "text";//type="text"
+    // inputQtdRegistros.id = "txtQtdRegistros";// id="txtQtdRegistros"
+    // inputQtdRegistros.name = "txtQtdRegistros";//name="txtQtdRegistros" 
+    // inputQtdRegistros.value = dados.RegistrosPorPagina;
+    // lblQtdRegistros = document.createElement("label");
+    // lblQtdRegistros.innerText = "Quantidade de Registros por Página: "
+    // liQtdRegistros.appendChild(lblQtdRegistros);
+    // liQtdRegistros.appendChild(inputQtdRegistros);
+
+
+    // ul.appendChild(linkPrimeiraPagina);
+    // ul.appendChild(linkVoltaUmaPagina);
+    // ul.appendChild(inputPagina);
+    // ul.appendChild(linkAvancaUmaPagina);
+    // ul.appendChild(linkUltimaPagina);
+    // ul.appendChild(liInfo);
+    // ul.appendChild(liQtdRegistros);
+    // div.appendChild(ul);
+    // cell.appendChild(div);
 }

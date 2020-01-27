@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="ISO-8859-1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tarefas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <nav class="topnav">
+      <a href="./usuarioCadastro.asp">Novo Usuário</a>
+      <a href="./usuarioTabela.asp">Tabela de Usuários</a>
+      <a href="./tarefaCadastro.asp">Nova Tarefa</a>
+      <a href="./tarefaTabela.asp">Tabela de Tarefas</a>
+      <a href="./index.asp">Index</a>
+    </nav>
+  </header>
+  <main class="col-12">
+    <div class="centralizar">
+      <table class="table" id="tblTarefas">
+        <caption>
+          <h3 class="center col-12">Lista de Tarefas</h3>
+        </caption>
+        <tfoot>
+          <tr>
+            <td colspan="5">
+              <div class="pagination">
+                <ul>
+                  <li>
+                    <button type="button" id="btnPrimeiraPagina" class="button button-primary col-1">
+                      <<</button> </li> <li>
+                        <button type="button" id="btnPaginaAnterior" class="button button-primary col-1">
+                          <</button> </li> <li>
+                            <input type="text" class="col-1 textfield" id="txtPagina" name="txtPagina" />
+                  </li>
+                  <li>
+                    <button type="button" id="btnPaginaAnterior" class="button button-primary col-1">
+                      ></button>
+                  </li>
+                  <li><button type="button" id="btnPaginaAnterior" class="button button-primary col-1">
+                      >></button>
+                  </li>
+                  <li>Mostrando <input type="text" class="col-1 textfield" id="txtRegistrosPagina" /> de <input type="text"
+                      class="col-1 textfield" id="txtTotalRegistros" /> Registros</li>
+                  <li><label>Quantidade de Registros por Página: </label><input type="text" class="col-1 textfield"
+                      id="txtQtdRegistros" name="txtQtdRegistros"></li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </main>
+  <script src="JScripts/Externos/Jquery-3-4-1.js" type="text/javascript"></script>
+  <script src="JScripts/Internos/TarefaTabela.js" type="text/javascript"></script>
+</body>
+
+</html>
