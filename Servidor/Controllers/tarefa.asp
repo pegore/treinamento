@@ -147,15 +147,19 @@ End Function
     set ObjConexao = new Conexao
     set cn = ObjConexao.AbreConexao()
     set ObjTarefa = new cTarefa
-    set rs = ObjTarefa.BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao, paginaPesquisa, registrosPorPagina)  
+    set rs = ObjTarefa.BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao)  
     If Not rs.Eof Then
-      numeroTotalPaginas = rs.PageCount
       rs.PageSize = registrosPorPagina
+      numeroTotalPaginas = rs.PageCount
       numeroTotalRegistros=rs.RecordCount
-      If paginaPesquisa < 1 Or paginaPesquisa > numeroTotalPaginas Then
+      If paginaPesquisa < 1 Then
         paginaPesquisa = 1			
-      End If    
+      End If
+      if(paginaPesquisa > numeroTotalPaginas ) then
+        paginaPesquisa=numeroTotalPaginas
+      end if
       rs.AbsolutePage = paginaPesquisa
+      fimPagina = registrosPorPagina * paginaPesquisa     
       Response.ContentType = "application/json"
       Response.Write "{"
       Response.Write """TotalRegistros"":""" & numeroTotalRegistros & ""","
@@ -163,7 +167,7 @@ End Function
       Response.Write """PaginaAtual"":""" & paginaPesquisa & ""","
       Response.Write """TotalPaginas"":""" & numeroTotalPaginas & ""","
       Response.Write """Registros"": ["
-      Do While Not (rs.Eof OR rs.AbsolutePage <> paginaPesquisa)
+      Do While not rs.eof and (rs.AbsolutePosition <= fimPagina)
         Response.Write "{"
         Response.Write """IdTarefa"": """ & rs("tarID") & ""","
         Response.Write """Titulo"": """ & rs("tarTitulo") & ""","
@@ -171,10 +175,10 @@ End Function
         Response.Write """DataGeracao"": """ & rs("tarData") & ""","
         Response.Write """Status"": """ & rs("tarStatus") & """"
         Response.Write "}"
-        if rs.AbsolutePosition < registrosPorPagina and rs.AbsolutePosition < numeroTotalRegistros then
+        rs.MoveNext
+        if (not rs.eof and rs.AbsolutePosition <= fimPagina) then
           Response.Write ","
         end if
-        rs.MoveNext
         Loop
     End If
     Response.Write "]"

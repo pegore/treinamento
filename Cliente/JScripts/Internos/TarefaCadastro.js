@@ -26,7 +26,7 @@ function AdicionarEventos(idTarefa) {
     $btnNovo = document.getElementById("btnNovo");
     BuscarGeradores($selGerador);
     $btnNovo.addEventListener("click", function () {
-        window.location.href = 'TabelaCadastro.asp';
+        window.location.href = 'TarefaCadastro.asp';
     });
     if (!idTarefa) {
         $btnExcluir.remove();

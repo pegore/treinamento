@@ -30,15 +30,15 @@
                   <li>
                     <button type="button" id="btnPrimeiraPagina" class="button button-default col-1">
                       <<</button> </li> <li>
-                        <button type="button" id="btnPaginaAnterior" class="button button-default col-1">
+                        <button type="button" id="btnVoltaPagina" class="button button-default col-1">
                           <</button> </li> <li>
                             <input type="text" class="col-1 textfield" id="txtPagina" name="txtPagina" />
                   </li>
                   <li>
-                    <button type="button" id="btnPaginaAnterior" class="button button-default col-1">
+                    <button type="button" id="btnAvancaPagina" class="button button-default col-1">
                       ></button>
                   </li>
-                  <li><button type="button" id="btnPaginaAnterior" class="button button-default col-1">
+                  <li><button type="button" id="btnUltimaPagina" class="button button-default col-1">
                       >></button>
                   </li>
                   <li id="txtDetalhesRegistros">Mostrando Registros</li>

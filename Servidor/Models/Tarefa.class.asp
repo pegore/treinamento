@@ -148,12 +148,11 @@ Class cTarefa
     end function
 
     'Buscar tarefas no banco de dados
-    public function BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao, paginaPesquisa, registrosPorPagina)
+    public function BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao)
         sqlPesquisa = "SELECT [tarID],[tarTitulo],[tarDescricao],[tarData],[tarStatus] "
         sqlPesquisa = sqlPesquisa & "FROM [tarefa] WHERE [tarTitulo] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
         sqlPesquisa = sqlPesquisa & " ORDER BY " & colunaOrdenacao
-        sqlPesquisa = sqlPesquisa & " OFFSET " & (paginaPesquisa * registrosPorPagina) & " ROWS FETCH NEXT " & registrosPorPagina & " ROWS ONLY;" 
         Set rs=Server.CreateObject("ADODB.recordset")
         rs.CursorLocation = 3 ' adUseClient
         rs.Open sqlPesquisa, cn, &H0001
