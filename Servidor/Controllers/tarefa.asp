@@ -13,18 +13,9 @@
     ' // TODO - Melhorar a recepção do front-end:
     '         - Selecionar melhor a função
     '         - Criar um objeto Tarefa e um objeto conexão
-    '         - Receber parametros em cada função
-    dim palavraParaPesquisa
-    dim registrosPorPagina 
-    dim paginaPesquisa
+    '         - Receber parametros em cada função   
     dim idTarefa : idTarefa =  Request("idTarefa")
-    dim fnTarget : fnTarget = Request("fnTarget")
-    if(IsNumeric(Request("paginaPesquisa"))) then
-      paginaPesquisa = Cint(Request("paginaPesquisa"))
-    end if
-    if(IsNumeric(Request("registrosPorPagina"))) then
-      registrosPorPagina = Cint(Request("registrosPorPagina"))
-    end if
+    dim fnTarget : fnTarget = Request("fnTarget")   
     Execute(fnTarget)
   End if
 
@@ -141,30 +132,39 @@ Function ExcluirTarefa()
 End Function
 
   Function BuscarTarefasPaginada()
-    Dim numeroTotalRegistros
-    Dim numeroTotalPaginas
-    Dim colunaOrdenacao: colunaOrdenacao = "tarID"
+    dim paginaPesquisa : paginaPesquisa = 0
+    dim registrosPorPagina : registrosPorPagina = 0
+    dim colunaOrdenacao : colunaOrdenacao = "tarID"
+    if(IsNumeric(Request("paginaPesquisa"))) then
+      paginaPesquisa = Cint(Request("paginaPesquisa"))
+    end if
+    if(IsNumeric(Request("registrosPorPagina"))) then
+      registrosPorPagina = Cint(Request("registrosPorPagina"))
+    end if
+    if (Request("colunaOrdenacao")<>"")then
+      colunaOrdenacao = Request("colunaOrdenacao")
+    end if
     set ObjConexao = new Conexao
     set cn = ObjConexao.AbreConexao()
     set ObjTarefa = new cTarefa
     set rs = ObjTarefa.BuscarTarefas(cn, palavraParaPesquisa, colunaOrdenacao)  
     If Not rs.Eof Then
       rs.PageSize = registrosPorPagina
-      numeroTotalPaginas = rs.PageCount
-      numeroTotalRegistros=rs.RecordCount
+      Dim numeroTotalPaginas : numeroTotalPaginas = rs.PageCount
+      Dim numeroTotalRegistros : numeroTotalRegistros = rs.RecordCount
       If paginaPesquisa < 1 Then
         paginaPesquisa = 1			
       End If
-      if(paginaPesquisa > numeroTotalPaginas ) then
-        paginaPesquisa=numeroTotalPaginas
+      if paginaPesquisa > numeroTotalPaginas then
+        paginaPesquisa = numeroTotalPaginas
       end if
       rs.AbsolutePage = paginaPesquisa
       fimPagina = registrosPorPagina * paginaPesquisa     
       Response.ContentType = "application/json"
       Response.Write "{"
-      Response.Write """TotalRegistros"":""" & numeroTotalRegistros & ""","
       Response.Write """RegistrosPorPagina"":""" & registrosPorPagina & ""","
       Response.Write """PaginaAtual"":""" & paginaPesquisa & ""","
+      Response.Write """TotalRegistros"":""" & numeroTotalRegistros & ""","
       Response.Write """TotalPaginas"":""" & numeroTotalPaginas & ""","
       Response.Write """Registros"": ["
       Do While not rs.eof and (rs.AbsolutePosition <= fimPagina)

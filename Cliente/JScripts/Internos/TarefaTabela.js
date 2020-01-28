@@ -1,5 +1,4 @@
 const url = "../Servidor/Controllers/tarefa.asp";
-debugger;
 var RegistrosPorPagina = Number(document.getElementById("txtQtdRegistros").value) || 10;
 var PaginaPesquisa = Number(document.getElementById("txtPagina").value) || 1;
 window.addEventListener('DOMContentLoaded', function () {
@@ -39,34 +38,30 @@ function AdicionarEventos() {
 }
 
 function PrimeiraPagina(event) {
-    debugger;
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, 1);
 }
 function VoltaPagina(event) {
-    debugger;
+    var $txtPagina = document.getElementById("txtPagina");
+    PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value) -1;
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa)
 }
 function AvancaPagina(event) {
-    debugger;
-    var row = document.getElementsByTagName('tbody')[0];
-    row.parentNode.removeChild(row);
     var $txtPagina = document.getElementById("txtPagina");
-    var novaPagina = Number($txtPagina.value) == NaN ? 0 : Number($txtPagina.value) + 1;
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, novaPagina);
+    PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value) + 1;
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
 }
 function UltimaPagina(event) {
-    debugger;
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, 32767);
 }
 function Pagina(event) {
-    debugger;
-    var row = document.getElementsByTagName('tbody')[0];
-    row.parentNode.removeChild(row);
-    // var $txtQtdRegistros = document.getElementById("txtQtdRegistros");
-    // RegistrosPorPagina = Number($txtQtdRegistros.value) == NaN ? 0 : Number($txtQtdRegistros.value);
     var $txtPagina = document.getElementById("txtPagina");
-    PaginaPesquisa = Number($txtPagina.value) == NaN ? 0 : Number($txtPagina.value);
+    PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value);
     BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
 }
 function QtdRegistros(event) {
-    debugger;
+    var $txtQtdRegistros = document.getElementById("txtQtdRegistros");
+    RegistrosPorPagina = isNaN($txtQtdRegistros.value) ? RegistrosPorPagina : Number($txtQtdRegistros.value);
+    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
 }
 
 function CriaInput(event) {
@@ -165,7 +160,12 @@ function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
 }
 
 function PreencheTabela(dados) {
-    var tbody = document.getElementById("tblTarefas").createTBody();
+    var $tabela = document.getElementById("tblTarefas");
+    if ($tabela.getElementsByTagName('tbody').length != 0) {
+        var row = document.getElementsByTagName('tbody')[0];
+        row.parentNode.removeChild(row);
+    }
+    var tbody = $tabela.createTBody();
     for (var element of dados.Registros) {
         var row = tbody.insertRow();
         for (key in element) {
