@@ -102,6 +102,20 @@ Class cTarefa
             UpdateTarefa = Cint(ObjTarefa.getId())
         end if
 	end function
+    
+    'Update de tarefas
+    public function UpdateTitulo(cn,ObjTarefa)
+        sql="UPDATE [dbo].[tarefa] SET "
+        sql=sql & "[tarTitulo] = '" & ObjTarefa.getTitulo() & "'"       
+        sql=sql & " WHERE [tarID]=" & ObjTarefa.getId() & ";"
+        on error resume next
+        cn.Execute(sql)
+        if err<>0 then
+            UpdateTitulo =  err.Description
+        else    
+            UpdateTitulo = Cint(ObjTarefa.getId())
+        end if
+	end function
   
     'Update de tarefas
     public function AlterarStatus(cn,ObjTarefa)

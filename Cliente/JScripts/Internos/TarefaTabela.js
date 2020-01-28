@@ -20,7 +20,6 @@ function AdicionarEventos() {
 }
 
 function CriaInput(event) {
-    debugger;
     event.stopImmediatePropagation();
     elemento = event.currentTarget;
     var input = document.createElement("input");
@@ -36,11 +35,11 @@ function CriaInput(event) {
     elemento.innerText = '';
     elemento.appendChild(input);
 }
+
 function EditarTitulo(event) {
     // TODO - Fazer a validação dos dados antes de enviar ao servidor
-    debugger;
     data = {
-        fnTarget: "EditarTarefa",
+        fnTarget: "EditarTitulo",
         idTarefa: event.currentTarget.id,
         titulo: event.currentTarget.value       
     }
@@ -53,7 +52,7 @@ function EditarTitulo(event) {
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
-            window.location.href = 'TarefaCadastro.asp?IdTarefa=' + data.IdTarefa;
+            window.location.reload();           
         },
         error: function (xhr, status, error) {
             alert("Erro: " + xhr + status + error);
@@ -168,6 +167,8 @@ function TabelaCriarCorpo(tabela, dadosCorpo) {
                     e.stopImmediatePropagation();
                     e.stopPropagation();
                     CriaInput(e);
+                    var ipt = document.getElementById(element.IdTarefa);
+                    ipt.focus();
                 });
             }
             if (key == 'Status' && element[key] != 0) {
@@ -190,7 +191,6 @@ function TabelaCriarCorpo(tabela, dadosCorpo) {
 }
 
 function TabelaCriarRodape(tabela, dados) {
-    debugger;
     var $detalhesRegistros = document.getElementById("txtDetalhesRegistros");
     $detalhesRegistros.innerText = "Mostrando " + dados.TotalRegistros + " de " + dados.TotalRegistros + " Registros";
     

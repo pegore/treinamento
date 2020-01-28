@@ -80,6 +80,23 @@ Function AlterarStatus()
   ObjConexao.FecharConexao(cn)
 End Function
 
+Function EditarTitulo()
+  set ObjTarefa = new cTarefa
+  ObjTarefa.setId(idTarefa)
+  ObjTarefa.setTitulo(Request("Titulo"))
+  set ObjConexao = new Conexao
+  set cn = ObjConexao.AbreConexao()
+  retorno = ObjTarefa.UpdateTitulo(cn, ObjTarefa)
+  Response.ContentType = "application/json"
+  Response.Write "{"
+  If VarType(retorno)=8 then ' Se for String - Não é a melhor forma mas foi o que consegui fazer
+      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+  Else
+    Response.Write """IdTarefa"":""" & retorno & """"
+  end if
+  Response.Write "}" 
+  ObjConexao.FecharConexao(cn)
+End Function
 '
 ' Função para atualizar um usuário no banco de dados
 '
@@ -127,7 +144,6 @@ End Function
     Dim numeroTotalRegistros
     Dim numeroTotalPaginas
     Dim colunaOrdenacao: colunaOrdenacao = "tarID"
-
     set ObjConexao = new Conexao
     set cn = ObjConexao.AbreConexao()
     set ObjTarefa = new cTarefa
