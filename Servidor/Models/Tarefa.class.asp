@@ -103,7 +103,7 @@ Class cTarefa
         end if
 	end function
     
-    'Update de tarefas
+    'Update de titulos
     public function UpdateTitulo(cn,ObjTarefa)
         sql="UPDATE [dbo].[tarefa] SET "
         sql=sql & "[tarTitulo] = '" & ObjTarefa.getTitulo() & "'"       
@@ -117,7 +117,7 @@ Class cTarefa
         end if
 	end function
   
-    'Update de tarefas
+    'Update de Status
     public function AlterarStatus(cn,ObjTarefa)
         sql="UPDATE [dbo].[tarefa] SET "
         sql=sql & "[tarStatus] = '" & ObjTarefa.getStatus() & "'"
@@ -153,7 +153,7 @@ Class cTarefa
         sqlPesquisa = sqlPesquisa & "FROM [tarefa] WHERE [tarTitulo] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
         sqlPesquisa = sqlPesquisa & " ORDER BY " & colunaOrdenacao
-        Set rs=Server.CreateObject("ADODB.recordset")
+        Set rs = Server.CreateObject("ADODB.recordset")
         rs.CursorLocation = 3 ' adUseClient
         rs.Open sqlPesquisa, cn, &H0001
 		set BuscarTarefas = rs
@@ -164,7 +164,7 @@ Class cTarefa
     '
     public function BuscarTarefaPorId(cn,tarID)
         sql = "SELECT * FROM [tarefa] where [tarID]='" & tarID & "'" 
-        Set rs=Server.CreateObject("ADODB.recordset")
+        Set rs = Server.CreateObject("ADODB.recordset")
         rs.Open sql, cn, &H0001
         set BuscarTarefaPorId = rs
     end function

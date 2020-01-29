@@ -13,7 +13,6 @@
     '         - Selecionar melhor a função
     '         - Criar um objeto usuario e um objeto conexão
     '         - Receber parametros em cada função
-    dim palavraParaPesquisa
     dim id
     dim RegistrosPorPagina 
     dim PaginaPesquisa
@@ -49,19 +48,23 @@ Function CadastrarUsuario()
   ObjUsuario.setEndereco(Request("endereco"))
   ObjUsuario.setCidade(Request("cidade"))
   ObjUsuario.setCep(Request("cep"))
-  ObjUsuario.setIdEstado(Request("estado")) 
-  set ObjConexao = new Conexao
-  set cn = ObjConexao.AbreConexao()
-  retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)
-  Response.ContentType = "application/json"
-  Response.Write "{"
-  If VarType(retorno)=8 then 
-      Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
-  Else
-    Response.Write """UsuId"":""" & retorno & """"
+  ObjUsuario.setIdEstado(Request("estado"))
+    Response.ContentType = "application/json"
+    Response.Write "{"
+  if ValidarUsuario(ObjUsuario) then
+    set ObjConexao = new Conexao
+    set cn = ObjConexao.AbreConexao()
+    retorno = objUsuario.InsercaoUsuario(cn, ObjUsuario)  
+    ObjConexao.FecharConexao(cn)
+    If VarType(retorno)=8 then 
+        Response.Write """Erro"":""" & Replace(retorno,chr(34),chr(39)) & """"
+    Else
+      Response.Write """UsuId"":""" & retorno & """"
+    end if
+  else
+      Response.Write """Erro"":""Usuário não pode ter campos vazios"""
   end if
   Response.Write "}"
-  ObjConexao.FecharConexao(cn)
 End function
 
 '
@@ -190,7 +193,7 @@ End function
     ObjConexao.FecharConexao(cn)
   End Function
 
-'
+  '
   ' Função para buscar os usuários em modo de paginação respnse write
   '
   Function BuscarGeradores()
@@ -218,6 +221,68 @@ End function
     rs.close()
     ObjConexao.FecharConexao(cn)
   End Function
+
+  Function ValidarUsuario(ObjetoUsuario)
+    ValidarUsuario = true
+    If (ObjUsuario.getUsuario()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getSenha()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getNome()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getEndereco()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getCidade()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getCep()="") Then
+      ValidarUsuario = false
+    End If
+    If ( ObjUsuario.getIdEstado()="") Then
+      ValidarUsuario = false
+    End If
+    If (ObjUsuario.getId()="") Then
+      ValidarUsuario = false
+    End If
+  End Function  
+    
+    
+    
+   
+    
+  End Function
+
+
+  '
+  ' Função para buscar os usuários em modo de paginação Chilkat
+  '
+  Function CKBuscarGeradores()
+    set ObjConexao = new Conexao
+    set cn = ObjConexao.AbreConexao()
+    set ObjUsuario = new cUsuario
+    set rs = objUsuario.BuscarUsuarios(cn, palavraParaPesquisa)  
+    If Not rs.Eof Then
+      Set json = Server.CreateObject("Chilkat_9_5_0.JsonObject")
+      success = json.AddArrayAt(-1,"Registros")
+      Set aRegistros = json.ArrayAt(json.Size - 1)
+      Do While Not (rs.Eof)
+        success = aRegistros.AddObjectAt(-1)
+        Set usuario = aRegistros.ObjectAt(aRegistros.Size - 1)
+        success = usuario.AddIntAt(-1,"UsuId",rs("usuid"))
+        success = usuario.AddStringAt(-1,"Nome",rs("nome"))      
+        rs.MoveNext
+        Loop
+    End If
+    rs.close()
+    ObjConexao.FecharConexao(cn)
+    json.EmitCompact = 0
+    Response.Write json.Emit()    
+  End Function
+
   '
   ' Função para buscar os usuários em modo de paginação Chilkat
   '

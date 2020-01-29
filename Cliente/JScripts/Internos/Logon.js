@@ -75,15 +75,6 @@ function ValidaLogin(data) {
     }
 }
 
-function verificarURL() {
-    var url_string = window.location.href;
-    var url = new URL(url_string);
-    var login = url.searchParams.get("login");
-    if (login == "vazio") {
-        mostraAlerta("Preencha os campos corretamente!!!");
-    };
-}
-
 function mostraAlerta(mensagem) {
     var $alerta = document.getElementById("divAlerta");
     $alerta.innerHTML = mensagem;

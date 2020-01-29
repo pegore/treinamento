@@ -77,4 +77,5 @@ Class Conexao
         '
         cn.Close()
 	end function
-End Class%>
+End Class
+%>

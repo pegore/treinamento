@@ -152,7 +152,7 @@ Class cUsuario
         sqlPesquisa = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] "
         sqlPesquisa = sqlPesquisa & "FROM [treinamento].[dbo].[usuario] WHERE [usuario] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
-        Set rs=Server.CreateObject("ADODB.recordset")
+        Set rs = Server.CreateObject("ADODB.recordset")
         rs.CursorLocation = 3 ' adUseClient
         rs.Open sqlPesquisa, cn, &H0001
 		set BuscarUsuarios = rs
@@ -163,7 +163,7 @@ Class cUsuario
     '
     public function BuscarUsuarioPorNomeSenha(cn,usuario,senha)        
         sql = "SELECT * FROM [treinamento].[dbo].[usuario] where usuario='" & usuario & "' and senha='" & senha & "'" 
-        Set rs=Server.CreateObject("ADODB.recordset")
+        Set rs = Server.CreateObject("ADODB.recordset")
         rs.Open sql, cn, &H0001
         set BuscarUsuarioPorNomeSenha = rs
     end function
