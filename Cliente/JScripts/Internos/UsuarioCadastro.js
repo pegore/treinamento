@@ -1,3 +1,4 @@
+const url = "../Servidor/Controllers/user.asp";
 document.addEventListener('DOMContentLoaded', function () {
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
@@ -24,26 +25,25 @@ function AdicionarEventos(usuid) {
     $btnNovo = document.getElementById("btnNovo");
     BuscarEstados($selEstado);
     $btnNovo.addEventListener("click", function () {
-        window.location.href = 'usuarioCadastro.asp';       
+        window.location.href = 'usuarioCadastro.asp';
     });
-    debugger;
     if (!usuid) {
         $btnExcluir.remove();
         $btnAlterar.remove();
         $btnCadastrar.classList.toggle('col-6');
         $btnNovo.classList.toggle('col-6');
         $btnCadastrar.addEventListener("click", function (e) {
-            CadastrarUsuario(e);
+            SalvarUsuario(e);
         });
         return;
     }
     $btnCadastrar.remove();
     $btnAlterar.addEventListener("click", function (e) {
-        EditarUsuario(e, usuid);
+        SalvarUsuario(e, usuid);
     });
 
     $btnExcluir.addEventListener("click", function (e) {
-        ExcluirUsuario(e, usuid);
+        ExcluirUsuario(usuid);
     });
     PreencherDadosUsuario(usuid);
 }
@@ -55,9 +55,9 @@ function AdicionarEventos(usuid) {
  * @param {HTMLSelectElement} elemento
  * @returns {HTMLOptionElement} 
  */
-function BuscarEstados(elemento, estadoId) {
+function BuscarEstados(elemento) {
     if (!elemento) {
-        return false;
+        return;
     }
     return $.ajax({
         url: "../Servidor/Controllers/estado.asp",
@@ -79,53 +79,22 @@ function BuscarEstados(elemento, estadoId) {
 }
 
 /**
- * Cadastra um usuário no servidor e retorna o identificador desse cadastro
+ * Salva(Insere ou edita) um usuário no servidor e retorna o identificador desse cadastro
  *
  * @author Lino Pegoretti
  * @param {Event} event
  * @returns {Object} 
  */
-function CadastrarUsuario(event) {
+function SalvarUsuario(event, usuid) {
     var usuario = CapturaCamposFormulario(event.currentTarget.form);
-    data = {
-        fnTarget: "CadastrarUsuario",
-        usuario: usuario.txtUsuario,
-        senha: usuario.pwdSenha,
-        nome: usuario.txtNome,
-        endereco: usuario.txtEndereco,
-        cidade: usuario.txtCidade,
-        cep: usuario.txtCep,
-        estado: usuario.selEstado
+    if (!UsuarioValido(usuario)) {
+        alert('Usuario invalido');
+        return;
     }
-    return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
-        type: 'POST',
-        data: data,
-        success: function (data) {
-            if (data.Erro) {
-                alert("Erro: " + data.Erro);
-            }
-            window.location.href = 'usuarioCadastro.asp?UsuId=' + data.UsuId;
-        },
-        error: function (xhr, status, error) {
-            alert("Erro: " + xhr + status + error);
-        }
-    });
-}
-
-/**
- * Edita um usuário no servidor e retorna o identificador desse cadastro
- * 
- * @author Lino Pegoretti
- * @param {Event} event 
- * @returns {object}
- */
-function EditarUsuario(event, usuid) {
-    // TODO - Fazer a validação dos dados antes de enviar ao servidor
-    debugger
-    var usuario = CapturaCamposFormulario(event.currentTarget.form);
+    var usuid = usuid || 0;
+    console.log(usuid);
     data = {
-        fnTarget: "EditarUsuario",
+        fnTarget: "SalvarUsuario",
         usuid: usuid,
         usuario: usuario.txtUsuario,
         senha: usuario.pwdSenha,
@@ -136,11 +105,10 @@ function EditarUsuario(event, usuid) {
         estado: usuario.selEstado
     }
     return $.ajax({
-        url: "../Servidor/Controllers/user.asp",
+        url: url,
         type: 'POST',
         data: data,
         success: function (data) {
-            debugger;
             if (data.Erro) {
                 alert("Erro: " + data.Erro);
             }
@@ -152,6 +120,7 @@ function EditarUsuario(event, usuid) {
     });
 }
 
+
 /**
  * Exclue um usuário no servidor
  * 
@@ -159,7 +128,7 @@ function EditarUsuario(event, usuid) {
  * @param {Event} event 
  * @returns {object}
  */
-function ExcluirUsuario(event, usuid) {
+function ExcluirUsuario(usuid) {
     data = {
         fnTarget: "ExcluirUsuario",
         usuid: usuid
@@ -252,4 +221,14 @@ function CapturaCamposFormulario(formularioHtml) {
         n++;
     }
     return objRetorno;
+}
+
+function UsuarioValido(usuario) {
+    debugger;
+    for (var campo in usuario) {
+        if (usuario.hasOwnProperty(campo)) {
+          console.log(`${campo} : ${usuario[campo]}`);
+        }
+      }
+    return true;
 }

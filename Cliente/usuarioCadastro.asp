@@ -7,7 +7,7 @@
 
 <body>
   <!--#include file="./Includes/TopMenu.inc"-->
-  <main class="col-12">
+  <main id = "main" class="col-12">
     <div class="centralizar">
       <form class="column spacing col-12" name="frmUser" id="frmUser" autoComplete="off">
         <h3 class="center col-12">Cadastro de Usuários</h3>

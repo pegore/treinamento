@@ -144,11 +144,6 @@ Class cUsuario
 
     'Buscar usuários do banco de dados
     public function BuscarUsuarios(cn, palavraParaPesquisa)
-        '
-        ' TODO Lógica para busca de usuários
-        '
-        ' definir o SQL para pesquisa de acordo com a entrada
-        ' Irá buscar todos os registros na tabela que contem os caracteres da pesquisa
         sqlPesquisa = "SELECT [usuid],[nome],[usuario],[endereco],[cidade],[cep] "
         sqlPesquisa = sqlPesquisa & "FROM [treinamento].[dbo].[usuario] WHERE [usuario] LIKE '%"
         sqlPesquisa = sqlPesquisa & Replace(palavraParaPesquisa, "'", "''") & "%'"
