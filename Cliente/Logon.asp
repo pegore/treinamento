@@ -2,12 +2,12 @@
 <html lang="pt-br">
 
 <head>
-   <!--#include file="./Includes/HtmlSecaoHead.inc"--> 
+   <!--#include file ="Includes\HtmlSecaoHead.inc"--> 
 </head>
 
 <body>
     <div class="centralizar">
-        <form name="formLogon" action="logon.asp" method="post" class="column spacing">
+        <form name="formLogon" method="post" class="column spacing">
             <img src="Images\key.png" alt="key" class="center" />
             <div class="row space-between">
                 <label for="txtUsuario">Usuário:</label>
@@ -20,11 +20,12 @@
             <div class="alerta alerta-info" id="divAlerta">
             </div>
             <div class="row space-between">
-                <button type="submit" id="btnLogin" name="btnLogin" class="button button-primary">Fazer Login</button>
+                <button type="button" id="btnLogin" name="btnLogin" class="button button-primary">Fazer Login</button>
             </div>
         </form>
     </div>
-    <script src="Scripts/Index.js" type="text/javascript"></script>
+    <script src="JScripts/Externos/Jquery-3-4-1.js" type="text/javascript"></script>
+    <script src="JScripts/Internos/Logon.js" type="text/javascript"></script>
 </body>
 
 </html>

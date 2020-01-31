@@ -1,0 +1,29 @@
+{
+    "TotalRegistros": 1000,
+    "RegistrosPorPagina": 10,
+    "PaginaAtual": 1,
+    "TotalPaginas":100,
+    "Registros": [
+        {
+            "UsuId": 1,
+            "Nome": "Usuario 01",
+            "Endereco": "Endereco Usuario 01",
+            "Cidade": "Cidade Usuario 01",
+            "Cep": "11.111-111"
+        },
+        {
+            "UsuId": 2,
+            "Nome": "Usuario 02",
+            "Endereco": "Endereco Usuario 02",
+            "Cidade": "Cidade Usuario 02",
+            "Cep": "22.222-222"
+        },
+        {
+            "UsuId": 3,
+            "Nome": "Usuario 03",
+            "Endereco": "Endereco Usuario 03",
+            "Cidade": "Cidade Usuario 03",
+            "Cep": "33.333-333"
+        }
+    ]
+}
