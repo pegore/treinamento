@@ -13,25 +13,25 @@
         <h3 class="center col-12">Cadastro de Usuários</h3>
         <div class="row form-group items-center">
           <label class="col-2" for="txtUsuario">Usuário:</label>
-          <input class="col-4 textfield" type="text" id="txtUsuario" name="txtUsuario" placeholder="Usuário">
+          <input class="col-4 textfield" type="text" id="txtUsuario" name="Usuario" placeholder="Usuário">
           <label class="col-2 pl-sm" for="pwdSenha">Senha:</label>
-          <input class="col-4 textfield" type="password" id="pwdSenha" name="pwdSenha" placeholder="Senha">
+          <input class="col-4 textfield" type="password" id="pwdSenha" name="Senha" placeholder="Senha">
         </div>
         <div class="row form-group items-center">
           <label class="col-2" for="txtNome">Nome:</label>
-          <input class="col-10 textfield" type="text" id="txtNome" name="txtNome" placeholder="Nome">
+          <input class="col-10 textfield" type="text" id="txtNome" name="Nome" placeholder="Nome">
         </div>
         <div class="row form-group items-center">
           <label class="col-2" for="txtEndereco">Endereço:</label>
-          <input class="col-4 textfield" type="text" id="txtEndereco" name="txtEndereco" placeholder="Endereço">
+          <input class="col-4 textfield" type="text" id="txtEndereco" name="Endereco" placeholder="Endereço">
           <label class="col-2 pl-sm" for="txtCidade">Cidade:</label>
-          <input class="col-4 textfield" type="text" id="txtCidade" name="txtCidade" placeholder="Cidade">
+          <input class="col-4 textfield" type="text" id="txtCidade" name="Cidade" placeholder="Cidade">
         </div>
         <div class="row form-group items-center">
           <label class="col-2" for="txtCep">Cep:</label>
-          <input class="col-4 textfield" type="text" id="txtCep" name="txtCep" placeholder="CEP">
+          <input class="col-4 textfield" type="text" id="txtCep" name="Cep" placeholder="CEP">
           <label class="col-2 pl-sm" for="selEstado">Estado:</label>
-          <select class="col-4 textfield" id="selEstado" name="selEstado">
+          <select class="col-4 textfield" id="selEstado" name="Estado">
             <option value="0">Selecione um Estado</option>
           </select>
         </div>

@@ -87,6 +87,10 @@ function BuscarGeradores(elemento) {
  */
 function CadastrarTarefa(event) {
     var tarefa = CapturaCamposFormulario(event.currentTarget.form);
+    if (!TarefaValida(tarefa)) {
+        alert('Tarefa Inválida');
+        return;
+    }
     data = {
         fnTarget: "CadastrarTarefa",
         Titulo: tarefa.txtTitulo,
@@ -112,15 +116,18 @@ function CadastrarTarefa(event) {
 }
 
 /**
- * Edita um usuário no servidor e retorna o identificador desse cadastro
+ * Edita uma tarefa no servidor e retorna o identificador desse cadastro
  * 
  * @author Lino Pegoretti
  * @param {Event} event 
  * @returns {object}
  */
 function EditarTarefa(event, idTarefa) {
-    // TODO - Fazer a validação dos dados antes de enviar ao servidor
     var tarefa = CapturaCamposFormulario(event.currentTarget.form);
+    if (!TarefaValida(tarefa)) {
+        alert('Tarefa Inválida');
+        return;
+    }
     data = {
         fnTarget: "EditarTarefa",
         idTarefa: idTarefa,
@@ -147,7 +154,7 @@ function EditarTarefa(event, idTarefa) {
 }
 
 /**
- * Exclue um usuário no servidor
+ * Exclue uma tarefa no servidor
  * 
  * @author Lino Pegoretti
  * @param {Event} event 
@@ -177,7 +184,7 @@ function ExcluirTarefa(event, IdTarefa) {
     });
 }
 /**
- * Retorna os dados de um usuario pelo Id e preenche o formulário
+ * Retorna os dados de uma tarefa pelo Id e preenche o formulário
  * 
  * @author Lino Pegoretti
  * @param {number} idTarefa
@@ -213,14 +220,9 @@ function PreencherDadosTarefa(idTarefa) {
  * @returns {HTMLFormElement}
  */
 function PreencheCamposFormulario(formularioHtml, prJSON) {
-    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
-    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
-    //          - Verificar outra forma de fazer o laço, utilizar for in  
-    var n = 0;
-    while (formularioHtml[n]) {
-        var txtNome = formularioHtml[n].name;
-        formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
-        n++;
+    for (var i = 0; i < formularioHtml.elements.length; i++) {   
+        var txtNome = formularioHtml[i].name;
+        formularioHtml[i].value = prJSON[txtNome] || '';
     }
     return formularioHtml;
 }
@@ -235,15 +237,25 @@ function PreencheCamposFormulario(formularioHtml, prJSON) {
  *  
  */
 function CapturaCamposFormulario(formularioHtml) {
-    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
-    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
-    //          - Verificar outra forma de fazer o laço, utilizar for in  
-    var n = 0;
     var objRetorno = {};
-    while (formularioHtml[n]) {
-        var campo = formularioHtml[n];
-        objRetorno[campo.name] = campo.value === "" ? null : campo.value;
-        n++;
+    for (var i = 0; i < formularioHtml.elements.length; i++) {
+        var campo = formularioHtml[i];
+        if (campo.name != "") {
+            objRetorno[campo.name] = campo.value === "" ? null : campo.value;
+        }
     }
     return objRetorno;
+}
+/**
+ * Função para validar os campos da tarefa antes de salvar
+ * 
+ * @param {Object} tarefa 
+ */
+function TarefaValida(tarefa) {
+    for (var campo in tarefa) {
+        if (tarefa.hasOwnProperty(campo) && tarefa[campo] == null) {
+            return false;
+        }
+    }
+    return true;
 }

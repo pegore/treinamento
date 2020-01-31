@@ -2,7 +2,7 @@ const url = "../Servidor/Controllers/tarefa.asp";
 var RegistrosPorPagina = Number(document.getElementById("txtQtdRegistros").value) || 10;
 var PaginaPesquisa = Number(document.getElementById("txtPagina").value) || 1;
 window.addEventListener('DOMContentLoaded', function () {
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
+    BuscarTarefas(RegistrosPorPagina, PaginaPesquisa);
     AdicionarEventos();
 });
 
@@ -38,55 +38,69 @@ function AdicionarEventos() {
 }
 
 function PrimeiraPagina(event) {
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, 1);
+    BuscarTarefas(RegistrosPorPagina, 1);
 }
 function VoltaPagina(event) {
     var $txtPagina = document.getElementById("txtPagina");
-    PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value) -1;
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa)
+    PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value) - 1;
+    BuscarTarefas(RegistrosPorPagina, PaginaPesquisa)
 }
 function AvancaPagina(event) {
     var $txtPagina = document.getElementById("txtPagina");
     PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value) + 1;
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
+    BuscarTarefas(RegistrosPorPagina, PaginaPesquisa);
 }
 function UltimaPagina(event) {
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, 32767);
+    BuscarTarefas(RegistrosPorPagina, 32767);
 }
 function Pagina(event) {
     var $txtPagina = document.getElementById("txtPagina");
     PaginaPesquisa = isNaN($txtPagina.value) ? 1 : Number($txtPagina.value);
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
+    BuscarTarefas(RegistrosPorPagina, PaginaPesquisa);
 }
 function QtdRegistros(event) {
     var $txtQtdRegistros = document.getElementById("txtQtdRegistros");
     RegistrosPorPagina = isNaN($txtQtdRegistros.value) ? RegistrosPorPagina : Number($txtQtdRegistros.value);
-    BuscarTarefas("BuscarTarefasPaginada", RegistrosPorPagina, PaginaPesquisa);
+    BuscarTarefas(RegistrosPorPagina, PaginaPesquisa);
 }
 
 function CriaInput(event) {
     event.stopImmediatePropagation();
     elemento = event.currentTarget;
+    var valorOriginal = elemento.innerText;
     var input = document.createElement("input");
     input.type = 'text';
     input.className = 'col-2 textfield';
-    input.value = elemento.innerText;
+    input.value = valorOriginal;
     input.id = elemento.id;
-    input.addEventListener("keydown", function (event) {
+    input.addEventListener("keyup", function (event) {
         if (event.key === "Enter") {
             EditarTitulo(event);
+            event.currentTarget.remove();
         }
+        if (event.key === "Escape") {
+            elemento.innerText = valorOriginal;
+            event.currentTarget.remove();
+        }
+    });
+    input.addEventListener("blur", function (event) {
+        elemento.innerText = valorOriginal;
+        event.currentTarget.remove();
     });
     elemento.innerText = '';
     elemento.appendChild(input);
 }
 
 function EditarTitulo(event) {
-    // TODO - Fazer a validação dos dados antes de enviar ao servidor
+    var titulo = event.currentTarget.value;
+    if (titulo == null || titulo == "") {
+        alert('Título não pode ser vazio');
+        return;
+    }
     data = {
         fnTarget: "EditarTitulo",
         idTarefa: event.currentTarget.id,
-        titulo: event.currentTarget.value
+        titulo: titulo
     }
     return $.ajax({
         url: url,
@@ -140,9 +154,9 @@ function AlterarStatus(event) {
     });
 }
 
-function BuscarTarefas(fnTarget, RegistrosPorPagina, PaginaPesquisa) {
+function BuscarTarefas(RegistrosPorPagina, PaginaPesquisa) {
     dadosPesquisa = {
-        "fnTarget": fnTarget,
+        "fnTarget": "BuscarTarefasPaginada",
         "RegistrosPorPagina": RegistrosPorPagina,
         "PaginaPesquisa": PaginaPesquisa,
     }
@@ -174,7 +188,6 @@ function PreencheTabela(dados) {
                 var a = document.createElement("a");
                 var params = new URLSearchParams();
                 params.append(key, element[key]);
-                // TODO - Melhorar a forma de construção da url criar objeto URL
                 var url = 'TarefaCadastro.asp?' + params.toString();
                 a.href = url;
                 a.innerText = element[key];

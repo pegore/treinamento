@@ -7,14 +7,12 @@ function AdicionarEventos() {
     var $senha = document.getElementById("pwdSenha");
     var $btnLogin = document.getElementById("btnLogin");
     $usuario.addEventListener('focusout', function (e) {
-        debugger
         if ($usuario.value == "") {
             mostraAlerta("Preencha o campo usuário!!!");
             $usuario.focus();
         }
     });
     $senha.addEventListener('focusout', function (e) {
-        debugger
         if ($senha.value == "") {
             mostraAlerta("Preencha o campo senha!!!");
             $senha.focus();
@@ -65,9 +63,7 @@ function MostraErro(xhr, status, error) {
 function ValidaLogin(data) {
     var retorno = JSON.parse(data);
     if (retorno.logado) {
-        /*
-        * Verificar como colocar os dados na sessão do usuário        
-        */
+        // TODO Verificar como colocar os dados na sessão do usuário        
         alert("Logado com sucesso");
         window.location.replace("./Principal.asp");
     } else {

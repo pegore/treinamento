@@ -92,7 +92,6 @@ function SalvarUsuario(event, usuid) {
         return;
     }
     var usuid = usuid || 0;
-    console.log(usuid);
     data = {
         fnTarget: "SalvarUsuario",
         usuid: usuid,
@@ -188,14 +187,9 @@ function PreencherDadosUsuario(usuId) {
  * @returns {HTMLFormElement}
  */
 function PreencheCamposFormulario(formularioHtml, prJSON) {
-    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
-    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
-    //          - Verificar outra forma de fazer o laço, utilizar for in  
-    var n = 0;
-    while (formularioHtml[n]) {
-        var txtNome = formularioHtml[n].name;
-        formularioHtml[n].value = prJSON[txtNome.substring(3)] || '';
-        n++;
+    for (var i = 0; i < formularioHtml.elements.length; i++) {   
+        var txtNome = formularioHtml[i].name;
+        formularioHtml[i].value = prJSON[txtNome] || '';
     }
     return formularioHtml;
 }
@@ -210,25 +204,25 @@ function PreencheCamposFormulario(formularioHtml, prJSON) {
  *  
  */
 function CapturaCamposFormulario(formularioHtml) {
-    // TODO - Verificar uma melhor forma de pegar os campos, sugestões:
-    //          - Deixar o id do jeito que está e colocar o name com o nome do objeto
-    //          - Verificar outra forma de fazer o laço, utilizar for in  
-    var n = 0;
     var objRetorno = {};
-    while (formularioHtml[n]) {
-        var campo = formularioHtml[n];
-        objRetorno[campo.name] = campo.value === "" ? null : campo.value;
-        n++;
+    for (var i = 0; i < formularioHtml.elements.length; i++) {
+        var campo = formularioHtml[i];
+        if (campo.name != "") {
+            objRetorno[campo.name] = campo.value === "" ? null : campo.value;
+        }
     }
     return objRetorno;
 }
-
+/**
+ * Função para validar os campso do usuário antes de salvar
+ * 
+ * @param {Object} usuario 
+ */
 function UsuarioValido(usuario) {
-    debugger;
     for (var campo in usuario) {
-        if (usuario.hasOwnProperty(campo)) {
-          console.log(`${campo} : ${usuario[campo]}`);
+        if (usuario.hasOwnProperty(campo) && usuario[campo] == null) {
+            return false;
         }
-      }
+    }
     return true;
 }
